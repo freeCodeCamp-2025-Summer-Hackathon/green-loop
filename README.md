@@ -22,4 +22,5 @@ JavaScript
 **Frontend**  
 Finian Knepper @finianknepper  
 Jackson @Wayloe  
+Michelle @dreamy.sin  
 **Backend**
