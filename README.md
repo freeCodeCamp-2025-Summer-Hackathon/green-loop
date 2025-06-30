@@ -2,7 +2,7 @@
 Repository for the green-loop team's work.
 
 Project Name: StudyCircle  
-**Naomi's Instuctions**
+**Naomi's Instuctions**  
 A collaborative study group platform.
 
 User Stories:
