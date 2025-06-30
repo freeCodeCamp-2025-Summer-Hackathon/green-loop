@@ -20,6 +20,6 @@ JavaScript
 
 # **The Team**  
 **Frontend**  
-Finian Knepper @finianknepper
-Jackson @Wayloe
+Finian Knepper @finianknepper  
+Jackson @Wayloe  
 **Backend**
