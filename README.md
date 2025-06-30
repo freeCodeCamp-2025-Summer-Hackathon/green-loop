@@ -18,7 +18,7 @@ JavaScript
 **Backend Code (Also Not Final)**  
 .NET  
 
-#**The Team**  
+**#The Team**  
 **Frontend**  
 Finian Knepper @finianknepper  
 **Backend**
