@@ -11,14 +11,14 @@ As a group member, I can post questions, resources, and meeting times.
 As a user, I can track which resources I've reviewed.  
 Hello @green-loop~! Here is your project for the Hackathon! Remember, the user stories are only to springboard your ideation, and are not a requirement. Excited to see what you all achieve!  
 
-**Frontend Code (Not Final)**  
+**Frontend Code**  
 HTML  
 CSS  
 JavaScript  
-**Backend Code (Also Not Final)**  
+**Backend Code**  
 .NET  
 
-**#The Team**  
+# **The Team**  
 **Frontend**  
 Finian Knepper @finianknepper  
 **Backend**
