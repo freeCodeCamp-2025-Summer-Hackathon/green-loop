@@ -21,5 +21,5 @@ JavaScript
 # **The Team**  
 **Frontend**  
 Finian Knepper @finianknepper
-Jackson Warren https://github.com/Wayloe
+[Jackson Warren] (https://github.com/Wayloe)
 **Backend**
