@@ -22,6 +22,7 @@ JavaScript
 **Frontend**  
 Finian Knepper @finianknepper  
 Jackson @Wayloe  
-Michelle @dreamy.sin  
+Michelle @dreamy.sin
+Tiffany @ Itnerd
 **Backend**  
 Abraham @abego2018
