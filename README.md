@@ -23,10 +23,9 @@ JavaScript
 Finian Knepper @finianknepper  
 Jackson @Wayloe  
 Michelle @dreamy.sin  
-JJ @jjotteson1
-
+JJ @jjotteson1  
 Tiffany @ Itnerd  
 **Backend**  
 Abraham @abego2018  
-Jesus @dontloseyourheadsu
-Jamike @bro9872/@johno
+Jesus @dontloseyourheadsu    
+Jamike @bro9872/@johno  
