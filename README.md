@@ -25,6 +25,7 @@ Jackson @Wayloe
 Michelle @dreamy.sin  
 JJ @jjotteson1
 
-Tiffany @ Itnerd
+Tiffany @ Itnerd  
 **Backend**  
 Abraham @abego2018
+Jesus @dontloseyourheadsu
