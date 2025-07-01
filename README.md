@@ -22,7 +22,7 @@ JavaScript
 **Frontend**  
 Finian Knepper @finianknepper  
 Jackson @Wayloe  
-Michelle @dreamy.sin
+Michelle @dreamy.sin  
 JJ @jjotteson1
 
 Tiffany @ Itnerd
