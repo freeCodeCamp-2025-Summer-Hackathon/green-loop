@@ -24,13 +24,13 @@ Finian Knepper @finianknepper
 Jackson @Wayloe  
 Michelle @dreamy.sin  
 JJ @jjotteson1  
-Tiffany @ Itnerd
-Enmanuel Torres @sn0wier  
-Donaven @donaven
+Tiffany @ Itnerd  
+Enmanuel Torres @sn0wier    
+Donaven @donaven  
 
 **Backend**  
 Abraham @abego2018  
 Jesus @dontloseyourheadsu    
 Jamike @bro9872/@johno  
 Enmanuel Torres @sn0wier  
-Donaven @donaven
+Donaven @donaven  
