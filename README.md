@@ -12,7 +12,7 @@ As a user, I can track which resources I've reviewed.
 Hello @green-loop~! Here is your project for the Hackathon! Remember, the user stories are only to springboard your ideation, and are not a requirement. Excited to see what you all achieve!  
 
 **Frontend Code**  
-React (Javascript, HTML, CSS) 
+React (Javascript, HTML, CSS)   
 **Backend Code**  
 Node.js
 
