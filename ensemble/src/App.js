@@ -9,14 +9,14 @@ import {
   UpdateUser,
   DeleteUser,
   Groups,
-} from "./components";
+} from "./frontend/components";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React, { useState } from "react";
-import { SignUp } from "./components";
-import { SearchDataContext } from "./context/searchDataContext";
-import { ThreadContext } from "./context/threadContext";
-import { UserDataContext } from "./context/userDataContext";
-import { GroupDataContext } from "./context/groupDataContext";
+import { SignUp } from "./frontend/components";
+import { SearchDataContext } from "./frontend/context/searchDataContext";
+import { ThreadContext } from "./frontend/context/threadContext";
+import { UserDataContext } from "./frontend/context/userDataContext";
+import { GroupDataContext } from "./frontend/context/groupDataContext";
 
 function App() {
   const [groupData, setGroupData] = useState([]);
