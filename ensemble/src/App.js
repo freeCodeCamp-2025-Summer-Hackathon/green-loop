@@ -1,23 +1,62 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import "./index.js";
+import {
+  Navigation,
+  Home,
+  Login,
+  Signup,
+  User,
+  UpdateUser,
+  DeleteUser,
+  Groups,
+} from "./components";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useState } from "react";
+import { SignUp } from "./components";
+import { SearchDataContext } from "./context/searchDataContext";
+import { ThreadContext } from "./context/threadContext";
+import { UserDataContext } from "./context/userDataContext";
+import { GroupDataContext } from "./context/groupDataContext";
 
 function App() {
+  const [groupData, setGroupData] = useState([]);
+  const [threadData, setThreadData] = useState([]);
+  const [logUserData, setLogUserData] = useState([]);
+
+  //welcome user
+  const [welcomeUser, setWelcomeUser] = useState("Please log in");
+  const logInLogOut = true;
+  //    welcomeUser === "Please log in" ? (
+  //      <a href="/Login">.</a>
+  //    ) : (
+  //      <a href="/Signup">.</a>
+  //    );
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {logInLogOut}
+      <UserDataContext.Provider value={{ logUserData, setLogUserData }}>
+        <GroupDataContext.Provider value={groupData}>
+          <ThreadContext.Provider value={threadData}>
+            <Router>
+              <Navigation loggedIn={logInLogOut} />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/Home" element={<Home user={welcomeUser} />} />
+                <Route
+                  path="/Login"
+                  element={<Login setWelcomeUser={setWelcomeUser} />}
+                />
+                <Route path="/Signup" element={<Signup />} />
+                <Route path="/User" element={<User />} />
+                <Route path="/DeleteUser" element={<DeleteUser />} />
+                <Route path="/UpdateUser" element={<UpdateUser />} />
+                <Route path="/Groups" element={<Groups />} />
+              </Routes>
+            </Router>
+          </ThreadContext.Provider>
+        </GroupDataContext.Provider>
+      </UserDataContext.Provider>
     </div>
   );
 }
