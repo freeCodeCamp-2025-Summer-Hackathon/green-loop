@@ -1,0 +1,7 @@
+:root {
+    --Background: #022F40;
+    --Button: #0090C1;
+    --Text: #e0edf5;
+    --rootFont: Arial, sans-serif;
+    --logo-image: url('/ensemble.svg')
+}
