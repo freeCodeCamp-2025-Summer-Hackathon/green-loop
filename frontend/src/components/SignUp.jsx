@@ -72,7 +72,6 @@ function SignUp() {
 
   }
 
-
   return (
     <SignUpContext.Provider
       value={{
@@ -106,9 +105,9 @@ function SignUp() {
 
             <Box mb={3}>{handleFormDisplay()}</Box>
 
-            <Stack direction="row" spacing={2} justifyContent="space-between">
+            <Stack direction="row" style={{'width': currPos === 1 ? '80%' : '100%'}} spacing={2} justifyContent="space-between">
               {currPos === 1 && (
-                <Button variant="outlined" onClick={() => setCurrPos(0)}>
+                <Button style={{'width': '50%'}} variant="outlined" onClick={() => setCurrPos(0)}>
                   Back
                 </Button>
               )}
@@ -116,8 +115,9 @@ function SignUp() {
               <Button
                 variant="contained"
                 sx={{ bgcolor: 'green', ':hover': { bgcolor: 'darkgreen' } }}
-                fullWidth
+                style={{'width': currPos === 1 ? '50%' : '100%'}}
                 onClick={() => OnContinueClick()}
+                
               >
                 {currPos === 1 ? 'Sign Up' : 'Next'}
               </Button>
