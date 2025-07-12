@@ -13,7 +13,7 @@ import CollegeDetailsForm from '../components/SignUpForm/CollegeDetailsForm';
 import SignUpContext from '../context/SignUpContext';
 
 function SignUp() {
-  const [currPos, setCurrPos] = useState(1);
+  const [currPos, setCurrPos] = useState(0);
   const [errors, setErrors] = useState({});
   const [personalFormHasError, setPersonalFormHasError] = useState(true);
   const [collegeDetailsFormData, setCollegeDetailsFormData] = useState({
@@ -72,17 +72,15 @@ function SignUp() {
           setErrors(newErrors);
           return newErrors
         } else {
-          if (collegeDetailsFormData.email === ""){
-          newErrors.email = "Email is required";
+          if (collegeDetailsFormData.college === ""){
+          newErrors.college = "College is required";
         }
-        if (collegeDetailsFormData.username === ""){
-          newErrors.username = "Username is required";
+        if (collegeDetailsFormData.major === ""){
+          newErrors.major = "Major is required";
         }
-        if (collegeDetailsFormData.password === ""){
-          newErrors.password = "Password is required";
+        if (collegeDetailsFormData.collegeYear === ""){
+          newErrors.collegeYear = "College year is required";
         }
-        if (collegeDetailsFormData.password !== collegeDetailsFormData.confirmPassword)
-            newErrors.confirmPassword = "Passwords do not match";
         setErrors(newErrors);
         return newErrors
         }
