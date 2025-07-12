@@ -5,13 +5,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+
+
 import {useContext} from 'react';
-
-
 import SignUpContext from '../../context/SignUpContext';
 
 export default function CollegeDetailsFormData() {
   const {collegeDetailsFormData, handleFormChange, errors} = useContext(SignUpContext)
+
+
   return (
     <Box component="form" noValidate sx={{ mt: 2 }}>
       <TextField
@@ -37,7 +39,7 @@ export default function CollegeDetailsFormData() {
       <TextField
         fullWidth
         label="Academic Year"
-        name="year"
+        name="collegeYear"
         value={collegeDetailsFormData.collegeYear || ""}
         onChange={handleFormChange}
         error={Boolean(errors.collegeYear)}
@@ -45,5 +47,5 @@ export default function CollegeDetailsFormData() {
         margin="normal"
       />
     </Box>
-  )
+  );
 }

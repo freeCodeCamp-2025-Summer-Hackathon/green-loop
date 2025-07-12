@@ -30,9 +30,14 @@ function SignUp() {
   });
 
   const handleFormChange = (e) => {
+    const { name, value } = e.target;
     if (currPos === 0) {
-      const { name, value } = e.target;
       setPersonalFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    } else if (currPos === 1) {
+      setCollegeDetailsFormData((prev) => ({
         ...prev,
         [name]: value,
       }));
