@@ -10,15 +10,15 @@ import {useContext} from 'react';
 
 import SignUpContext from '../../context/SignUpContext';
 
-export default function CollegeDetailsForm() {
-  const {collegeDetailsForm, handleFormChange, errors} = useContext(SignUpContext)
+export default function CollegeDetailsFormData() {
+  const {collegeDetailsFormData, handleFormChange, errors} = useContext(SignUpContext)
   return (
     <Box component="form" noValidate sx={{ mt: 2 }}>
       <TextField
         fullWidth
         label="University"
         name="college"
-        value={collegeDetailsForm.college || ""}
+        value={collegeDetailsFormData.college || ""}
         onChange={handleFormChange}
         error={Boolean(errors.college)}
         helperText={errors.college}
@@ -28,7 +28,7 @@ export default function CollegeDetailsForm() {
         fullWidth
         label="Field of Study"
         name="major"
-        value={collegeDetailsForm.major || ""}
+        value={collegeDetailsFormData.major || ""}
         onChange={handleFormChange}
         error={Boolean(errors.major)}
         helperText={errors.major}
@@ -38,7 +38,7 @@ export default function CollegeDetailsForm() {
         fullWidth
         label="Academic Year"
         name="year"
-        value={collegeDetailsForm.collegeYear || ""}
+        value={collegeDetailsFormData.collegeYear || ""}
         onChange={handleFormChange}
         error={Boolean(errors.collegeYear)}
         helperText={errors.collegeYear}
