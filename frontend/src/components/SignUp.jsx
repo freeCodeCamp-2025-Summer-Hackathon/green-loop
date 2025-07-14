@@ -16,6 +16,11 @@ function SignUp() {
   const [currPos, setCurrPos] = useState(0);
   const [errors, setErrors] = useState({});
   const [personalFormHasError, setPersonalFormHasError] = useState(true);
+  const [collegeDetailsFormData, setCollegeDetailsFormData] = useState({
+    college: "",
+    major: "",
+    collegeYear: "Freshman",
+  });
 
   const [personalFormData, setPersonalFormData] = useState({
     email: "",
@@ -25,9 +30,14 @@ function SignUp() {
   });
 
   const handleFormChange = (e) => {
+    const { name, value } = e.target;
     if (currPos === 0) {
-      const { name, value } = e.target;
       setPersonalFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    } else if (currPos === 1) {
+      setCollegeDetailsFormData((prev) => ({
         ...prev,
         [name]: value,
       }));
@@ -45,20 +55,40 @@ function SignUp() {
 
 
 
-  const validatePersonalForm = () => {
+  const validateForm = () => {
         const newErrors = {};
-        if (!personalFormData.email) newErrors.email = "Email is required";
-        if (!personalFormData.username) newErrors.username = "Username is required";
-        if (!personalFormData.password) newErrors.password = "Password is required";
-        if (personalFormData.password !== personalFormData.confirmPassword)
-            newErrors.confirmPassword = "Passwords do not match";
+        if (currPos === 0){
+            if (personalFormData.email === ""){
+            newErrors.email = "Email is required";
+          }
+          if (personalFormData.username === ""){
+            newErrors.username = "Username is required";
+          }
+          if (personalFormData.password === ""){
+            newErrors.password = "Password is required";
+          }
+          if (personalFormData.password !== personalFormData.confirmPassword)
+              newErrors.confirmPassword = "Passwords do not match";
+          setErrors(newErrors);
+          return newErrors
+        } else {
+          if (collegeDetailsFormData.college === ""){
+          newErrors.college = "College is required";
+        }
+        if (collegeDetailsFormData.major === ""){
+          newErrors.major = "Major is required";
+        }
+        if (collegeDetailsFormData.collegeYear === ""){
+          newErrors.collegeYear = "College year is required";
+        }
         setErrors(newErrors);
         return newErrors
+        }
     };
 
     const OnContinueClick = () => {
     if (currPos === 0){
-      const validationErrors = validatePersonalForm();
+      const validationErrors = validateForm();
       const hasErrors = Object.keys(validationErrors).length > 0;
 
       if (!hasErrors) {
@@ -77,9 +107,9 @@ function SignUp() {
       value={{
         errors,
         personalFormData,
-        setPersonalFormData,
         handleFormChange,
         setCurrPos,
+        collegeDetailsFormData
       }}
     >
       <Box sx={{ maxWidth: 500, margin: '40px auto' }}>
@@ -105,23 +135,15 @@ function SignUp() {
 
             <Box mb={3}>{handleFormDisplay()}</Box>
 
-            <Stack direction="row" style={{'width': currPos === 1 ? '80%' : '100%'}} spacing={2} justifyContent="space-between">
-              {currPos === 1 && (
-                <Button style={{'width': '50%'}} variant="outlined" onClick={() => setCurrPos(0)}>
-                  Back
-                </Button>
-              )}
-
+           
               <Button
                 variant="contained"
                 sx={{ bgcolor: 'green', ':hover': { bgcolor: 'darkgreen' } }}
-                style={{'width': currPos === 1 ? '50%' : '100%'}}
                 onClick={() => OnContinueClick()}
-                
+                fullWidth
               >
                 {currPos === 1 ? 'Sign Up' : 'Next'}
               </Button>
-            </Stack>
           </CardContent>
         </Card>
       </Box>
