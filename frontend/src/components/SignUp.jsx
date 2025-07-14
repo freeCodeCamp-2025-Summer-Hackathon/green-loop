@@ -19,7 +19,7 @@ function SignUp() {
   const [collegeDetailsFormData, setCollegeDetailsFormData] = useState({
     college: "",
     major: "",
-    collegeYear: "",
+    collegeYear: "Freshman",
   });
 
   const [personalFormData, setPersonalFormData] = useState({
@@ -135,22 +135,15 @@ function SignUp() {
 
             <Box mb={3}>{handleFormDisplay()}</Box>
 
-            <Stack  direction="row" style={{'width': currPos === 1 ? '80%' : '100%'}} spacing={2} justifyContent="space-between">
-              {currPos === 1 && (
-                <Button style={{'width': '50%'}} variant="outlined" onClick={() => setCurrPos(0)}>
-                  Back
-                </Button>
-              )}
-
+           
               <Button
                 variant="contained"
                 sx={{ bgcolor: 'green', ':hover': { bgcolor: 'darkgreen' } }}
-                style={{'width': currPos === 1 ? '50%' : '100%'}}
                 onClick={() => OnContinueClick()}
+                fullWidth
               >
                 {currPos === 1 ? 'Sign Up' : 'Next'}
               </Button>
-            </Stack>
           </CardContent>
         </Card>
       </Box>
