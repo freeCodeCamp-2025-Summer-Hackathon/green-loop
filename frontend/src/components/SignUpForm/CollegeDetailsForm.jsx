@@ -4,6 +4,10 @@ import {
   Button,
   TextField,
   Typography,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel
 } from "@mui/material";
 
 
@@ -36,16 +40,23 @@ export default function CollegeDetailsFormData() {
         helperText={errors.major}
         margin="normal"
       />
-      <TextField
-        fullWidth
-        label="Academic Year"
-        name="collegeYear"
-        value={collegeDetailsFormData.collegeYear || ""}
-        onChange={handleFormChange}
-        error={Boolean(errors.collegeYear)}
-        helperText={errors.collegeYear}
-        margin="normal"
-      />
+     
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="collegeYear-label">Academic Year</InputLabel>
+        <Select
+          labelId="collegeYear-label"
+          id="collegeYear"
+          name="collegeYear"
+          value={collegeDetailsFormData.collegeYear || ""}
+          onChange={handleFormChange}
+          label="Academic Year" // important for floating label to work
+        >
+          <MenuItem value="freshman">Freshman</MenuItem>
+          <MenuItem value="sophomore">Sophomore</MenuItem>
+          <MenuItem value="junior">Junior</MenuItem>
+          <MenuItem value="senior">Senior</MenuItem>
+        </Select>
+      </FormControl>
     </Box>
   );
 }
