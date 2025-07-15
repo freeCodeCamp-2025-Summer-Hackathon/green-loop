@@ -164,6 +164,23 @@ function SignUp() {
             >
               {currPos === 1 ? "Sign Up" : "Next"}
             </Button>
+
+            <Typography textAlign="center" mt={2} sx={{ fontSize: 14 }}>
+            Already have an account?{" "}
+            <Button
+            variant="text"
+            size="small"
+            sx={{ textTransform: "none", color: "primary.main", fontWeight: 500 }}
+            onClick={() => {
+            // navigate to login page
+            // if you're using react-router-dom, use useNavigate()
+            // e.g., navigate("/login")
+            window.location.href = "/login";
+            }}
+            >
+            Click here to log in
+            </Button>
+            </Typography>
           </CardContent>
         </Card>
       </Box>

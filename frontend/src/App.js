@@ -5,6 +5,8 @@ import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { Routes } from 'react-router-dom';
+import SignIn from './components/SignIn.jsx';
 
 
 
@@ -22,7 +24,10 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* Optional: resets default browser styles */}
       <div>
-        <SignUp/>
+        <Routes>
+            <Route path="/" element={<SignUp />} />
+            <Route path="/auth/login" element={<SignIn />} />
+        </Routes>
       </div>
     </ThemeProvider>
     
