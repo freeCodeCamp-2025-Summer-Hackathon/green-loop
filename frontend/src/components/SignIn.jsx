@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import FormWrapper from './FormWrapper';
+import {
+    Typography
+} from '@mui/material'
 
 
 function SignIn() {
@@ -12,32 +16,27 @@ function SignIn() {
     };
 
     return (
-        <div className="signin-container">
-            <h2>Sign In</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Sign In</button>
-            </form>
-        </div>
+        <FormWrapper>
+            <Typography
+              variant="h2"
+              color="primary"
+              textAlign="center"
+              gutterBottom
+            >
+              Ensemble
+            </Typography>
+            <Typography
+              fontStyle="italic"
+              textAlign="center"
+              sx={{ fontSize: 20, color: "black", mb: 3 }}
+            >
+              Login to your account
+
+            </Typography>
+
+              
+
+        </FormWrapper>
     );
 };
 

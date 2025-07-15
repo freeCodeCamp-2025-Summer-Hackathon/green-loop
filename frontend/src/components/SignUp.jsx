@@ -1,5 +1,6 @@
 import fonts from "../fonts/fonts";
 import React, { useState } from "react";
+import FormWrapper from "./FormWrapper";
 import {
   Box,
   Button,
@@ -10,6 +11,8 @@ import {
   IconButton,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+import { useNavigate } from "react-router-dom";
 
 import PersonalDetailsForm from "../components/SignUpForm/PersonalDetailsForm";
 import CollegeDetailsForm from "../components/SignUpForm/CollegeDetailsForm";
@@ -31,6 +34,8 @@ function SignUp() {
     password: "",
     confirmPassword: "",
   });
+
+  const navigate = useNavigate();
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -115,6 +120,11 @@ function SignUp() {
     );
   };
 
+  
+
+
+
+
   return (
     <SignUpContext.Provider
       value={{
@@ -125,17 +135,8 @@ function SignUp() {
         collegeDetailsFormData,
       }}
     >
-      <Box sx={{ maxWidth: 500, margin: "40px auto" }}>
-        <Card
-          variant="outlined"
-          sx={{
-            borderRadius: 4,
-            backgroundColor: "#f9f9f9",
-            boxShadow: 3,
-          }}
-        >
-          <CardContent>
-            {/* Back Button */}
+      <FormWrapper>
+         {/* Back Button */}
             {currPos === 1 && displayBackButton()}
 
             <Typography
@@ -166,24 +167,19 @@ function SignUp() {
             </Button>
 
             <Typography textAlign="center" mt={2} sx={{ fontSize: 14 }}>
-            Already have an account?{" "}
-            <Button
-            variant="text"
-            size="small"
-            sx={{ textTransform: "none", color: "primary.main", fontWeight: 500 }}
-            onClick={() => {
-            // navigate to login page
-            // if you're using react-router-dom, use useNavigate()
-            // e.g., navigate("/login")
-            window.location.href = "/login";
-            }}
-            >
-            Click here to log in
-            </Button>
+              Already have an account?{" "}
+              <Button
+                variant="text"
+                size="small"
+                sx={{ textTransform: "none", color: "primary.main", fontWeight: 500 }}
+                onClick={() => {
+                navigate('/auth/login')
+                }}
+              >
+              Click here to log in
+              </Button>
             </Typography>
-          </CardContent>
-        </Card>
-      </Box>
+      </FormWrapper>
     </SignUpContext.Provider>
   );
 }
