@@ -1,18 +1,65 @@
 import React, { useState } from 'react';
 import FormWrapper from './FormWrapper';
 import {
-    Typography
+    Typography,
+    TextField,
+    Button,
+    Box
 } from '@mui/material'
 
 
 function SignIn() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const [loginCredentials, setLoginCredentials] = useState({
+    email: "",
+    password: ""
+  });
 
+  const [errors, setErrors] = useState({});
+  const [hasError, setHasError] = useState(true);
+
+  
+  const handleFormChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+
+    if (e.target.name === 'email') {
+      setLoginCredentials((prev) => ({
+      ...prev,
+      email: value
+    }));
+    } else if (e.target.name === 'password') {
+      setLoginCredentials((prev) => ({
+      ...prev,
+      password: value
+    }));
+}
+
+    console.log(loginCredentials)
+  }
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (loginCredentials.email === ""){
+      newErrors.email = 'Email is required'
+    } else if (loginCredentials.password){
+      newErrors.password = 'Password is required'
+    }
+    return newErrors
+    }
+    
+  
     const handleSubmit = (e) => {
         e.preventDefault();
         // Handle sign in logic here
-        console.log('Email:', email, 'Password:', password);
+        const hasErrors = validateForm();
+        if (!hasErrors){
+          setHasError(false)
+        } else {
+          // that means there is an error 
+          setHasError(true)
+        }
+        
     };
 
     return (
@@ -34,10 +81,42 @@ function SignIn() {
 
             </Typography>
 
+            <Box mb={3}>
+              <TextField
+                  fullWidth
+                label="email"
+                name="email"
+                type="email"
+                value={loginCredentials.password || ""}
+                onChange={handleFormChange}
+                error={Boolean(errors.password)}
+                helperText={errors.password}
+                margin="normal"
+              />
+
+
+              <TextField
+                  fullWidth
+                label="Password"
+                name="password"
+                type="password"
+                value={loginCredentials.password || ""}
+                onChange={handleFormChange}
+                error={Boolean(errors.password)}
+                helperText={errors.password}
+                margin="normal"
+              />
               
+            </Box>
+              <Button 
+                variant="contained"
+                fullWidth
+                sx={{ bgcolor: "green", ":hover": { bgcolor: "darkgreen" } }}
+              >
+                Login
+              </Button>
 
         </FormWrapper>
     );
-};
-
+  }
 export default SignIn;
