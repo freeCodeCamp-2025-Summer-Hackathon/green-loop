@@ -41,3 +41,6 @@ class UserLogin(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+
+class BaseResponse (BaseModel):
+    detail : str
