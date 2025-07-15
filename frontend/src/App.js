@@ -7,6 +7,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Routes, Route } from 'react-router-dom';
 import SignIn from './components/SignIn.jsx';
+import Dashboard from './components/Dashboard.jsx';
 
 
 
@@ -27,6 +28,7 @@ function App() {
         <Routes>
             <Route path="/" element={<SignUp />} />
             <Route path="/auth/login" element={<SignIn />} />
+            <Route path="/dashboard" element={<Dashboard/>}/>
         </Routes>
       </div>
     </ThemeProvider>

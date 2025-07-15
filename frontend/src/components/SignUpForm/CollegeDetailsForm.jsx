@@ -55,6 +55,7 @@ export default function CollegeDetailsFormData() {
           <MenuItem value="sophomore">Sophomore</MenuItem>
           <MenuItem value="junior">Junior</MenuItem>
           <MenuItem value="senior">Senior</MenuItem>
+          <MenuItem value='notApplicable'> N/A </MenuItem>
         </Select>
       </FormControl>
     </Box>

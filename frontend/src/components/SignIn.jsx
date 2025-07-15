@@ -4,8 +4,12 @@ import {
     Typography,
     TextField,
     Button,
-    Box
+    Box, 
+    IconButton
 } from '@mui/material'
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from 'react-router-dom';
 
 
 function SignIn() {
@@ -16,6 +20,7 @@ function SignIn() {
 
   const [errors, setErrors] = useState({});
   const [hasError, setHasError] = useState(true);
+  const navigation = useNavigate();
 
   
   const handleFormChange = (e) => {
@@ -49,21 +54,57 @@ function SignIn() {
     }
     
   
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Handle sign in logic here
-        const hasErrors = validateForm();
-        if (!hasErrors){
-          setHasError(false)
-        } else {
-          // that means there is an error 
-          setHasError(true)
-        }
-        
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Handle sign in logic here
+    const validationErrors = validateForm();
+    const hasErrors = Object.keys(validationErrors).length > 0;
+    if (!hasErrors){
+      setHasError(false)
+    } else {
+    // that means there is an error 
+      setHasError(true)
+    }
+
+    //Send form data to backend
+    const formData = JSON.stringify(loginCredentials)
+
+    try {
+      const response = await fetch('http://localhost:8000/api/create_new_user', {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        alert(response.json().detail)
+      }
+
+      const result = await response.json();
+      console.log('Success:', result);
+      alert('User created sucessfully')
+
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    // Optionally show an error message to the user
+    }
+
+  };
 
     return (
         <FormWrapper>
+
+          <IconButton
+          aria-label="back"
+          size="medium"
+          onClick={() => {
+              navigation('/')
+          }}
+          >
+            <ArrowBackIcon fontSize="inherit" />
+          </IconButton>
             <Typography
               variant="h2"
               color="primary"
@@ -111,6 +152,7 @@ function SignIn() {
               <Button 
                 variant="contained"
                 fullWidth
+                onSubmit={handleSubmit}
                 sx={{ bgcolor: "green", ":hover": { bgcolor: "darkgreen" } }}
               >
                 Login

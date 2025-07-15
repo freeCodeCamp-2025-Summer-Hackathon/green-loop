@@ -4,7 +4,7 @@ import { Box, Card, CardContent } from "@mui/material";
 
 const FormWrapper = ({ children }) => {
   return (
-    <Box sx={{ maxWidth: 500, margin: "40px auto" }}>
+    <Box  sx={{ maxWidth: 500, margin: "40px auto" }}>
       <Card
         variant="outlined"
         sx={{
