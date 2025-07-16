@@ -8,8 +8,9 @@ import {
 } from "@mui/material";
 
 import { Link } from "react-router-dom";
+import DashRender from "./DashRender";
 
-function DashNav() {
+function DashNav({ onNavigate }) {
   return (
     <div style={{ display: "flex" }}>
       <CssBaseline />
@@ -22,16 +23,16 @@ function DashNav() {
           borderRadius: "5px",
         }}
       >
-        <ListItemButton component={Link} to="/dashboard">
+        <ListItemButton onClick={() => onNavigate("dash")}>
           Dashboard
         </ListItemButton>
-        <ListItemButton component={Link} to="/groups">
+        <ListItemButton onClick={() => onNavigate("groups")}>
           Groups
         </ListItemButton>
-        <ListItemButton component={Link} to="/Threads">
+        <ListItemButton onClick={() => onNavigate("threads")}>
           Threads
         </ListItemButton>
-        <ListItemButton component={Link} to="/Resources">
+        <ListItemButton onClick={() => onNavigate("resources")}>
           Resources
         </ListItemButton>
       </List>

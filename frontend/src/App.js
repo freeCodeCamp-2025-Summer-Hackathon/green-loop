@@ -1,13 +1,19 @@
 import logo from "./logo.svg";
 import "./App.css";
-import SignUp from "./components/SignUp.jsx";
 import { createTheme } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Routes, Route } from "react-router-dom";
-import SignIn from "./components/SignIn.jsx";
-import Dashboard from "./components/Dashboard/Dashboard.jsx";
+import {
+  Dashboard,
+  DashNav,
+  Groups,
+  Resources,
+  Threads,
+  SignIn,
+  SignUp,
+} from "./components";
 
 const theme = createTheme({
   palette: {
@@ -27,7 +33,9 @@ function App() {
             <Route path="/auth/login" element={<SignIn />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes> */}
-        <Dashboard />
+        <Routes>
+          <Route path="/" element={<Dashboard />}></Route>
+        </Routes>
       </div>
     </ThemeProvider>
   );
