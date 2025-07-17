@@ -71,7 +71,7 @@ async def login(user: schemas.UserLogin, db_session: Session = Depends(get_db_se
 #Get new access token based on refreshed token 
 @router.post("/refresh_token", response_model=schemas.AccessTokenResponse, summary='Get Refresh Users')
 async def refresh_access_token(
-    refresh_token: str = Body(...), 
+    refresh_token: schemas.RefreshTokenRequest, 
     db: Session = Depends(get_db_session)
 ):
     user = auth.verify_token(refresh_token, db, is_refresh=True)
