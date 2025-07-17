@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 
 import { Link } from "react-router-dom";
-import DashRender from "./DashRender";
 
 function DashNav({ onNavigate }) {
   return (
@@ -20,7 +19,9 @@ function DashNav({ onNavigate }) {
         sx={{
           marginTop: "60px",
           backgroundColor: "lightgray",
-          borderRadius: "5px",
+          borderTopLeftRadius: "5px",
+          borderBottomLeftRadius: "5px",
+          height: "50vh",
         }}
       >
         <ListItemButton onClick={() => onNavigate("dash")}>

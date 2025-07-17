@@ -5,15 +5,7 @@ import { green } from "@mui/material/colors";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Routes, Route } from "react-router-dom";
-import {
-  Dashboard,
-  DashNav,
-  Groups,
-  Resources,
-  Threads,
-  SignIn,
-  SignUp,
-} from "./components";
+import { Dashboard, SignIn, SignUp } from "./components";
 
 const theme = createTheme({
   palette: {

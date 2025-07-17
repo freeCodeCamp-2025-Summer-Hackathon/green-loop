@@ -8,13 +8,13 @@ import {
   CardContent,
   Typography,
   Stack,
+  Toolbar,
 } from "@mui/material";
 import DashNav from "./DashNav";
-import Groups from "../Groups/Groups";
-import Threads from "../Groups/Threads";
-import Resources from "../Groups/Resources";
-import DashRender from "./DashRender";
-import Dash from "../Groups/Dash";
+import Groups from "../DashRender/Groups";
+import Threads from "../DashRender/Threads";
+import Resources from "../DashRender/Resources";
+import Dash from "../DashRender/Dash";
 
 function Dashboard() {
   const [activeComponent, setActiveComponent] = useState("dash");
@@ -29,12 +29,26 @@ function Dashboard() {
           Ensemble
         </Typography>
         <Box>
-          <DashNav onNavigate={handleNavigateclick} />
-          <DashRender props={activeComponent} />
-          {activeComponent === "dash" && <Dash />}
-          {activeComponent === "groups" && <Groups />}
-          {activeComponent === "threads" && <Threads />}
-          {activeComponent === "resources" && <Resources />}
+          <Toolbar>
+            <DashNav onNavigate={handleNavigateclick} />
+            <Box sx={{ width: "20px" }} />
+            <Box
+              sx={{
+                display: "flexbox",
+                marginTop: "60px",
+                backgroundColor: "lightgrey",
+                width: "80%",
+                height: "50vh",
+                borderTopRightRadius: "5px",
+                borderBottomRightRadius: "5px",
+              }}
+            >
+              {activeComponent === "dash" && <Dash />}
+              {activeComponent === "groups" && <Groups />}
+              {activeComponent === "threads" && <Threads />}
+              {activeComponent === "resources" && <Resources />}
+            </Box>
+          </Toolbar>
         </Box>
       </Box>
     </Container>
