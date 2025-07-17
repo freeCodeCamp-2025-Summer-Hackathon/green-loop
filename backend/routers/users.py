@@ -12,9 +12,14 @@ router = APIRouter()
 @router.post(
         "/create_new_user", 
         summary="Create a new user", 
- 
-        status_code=status.HTTP_201_CREATED)
-async def register( userDto: schemas.UserCreate, db_session: Session = Depends(get_db_session)):
+        status_code=status.HTTP_201_CREATED,
+        response_model=schemas.BaseResponse
+
+        )
+async def register( 
+        userDto: schemas.UserCreate, 
+        db_session: Session = Depends(get_db_session), 
+        ):
     """  Register a new user"""
     # Check if user already exists
     db_user_email = db_session.exec(
@@ -32,9 +37,7 @@ async def register( userDto: schemas.UserCreate, db_session: Session = Depends(g
     new_user = await utils.create_user(userDto, db_session)
     if not new_user:
         raise HTTPException(status_code=500, detail="User creation failed")
-    # Create access token for the new user
-    access_token = await auth.create_access_token(new_user)
-    
+        
     return {"detail": "User created successfully"}
 
 
@@ -62,3 +65,18 @@ async def login(user: schemas.UserLogin, db_session: Session = Depends(get_db_se
     return schemas.AccessTokenResponse(
         access_token=access_token,
         refresh_token=refresh_token)
+
+
+
+#Get new access token based on refreshed token 
+@router.post("/refresh_token", response_model=schemas.AccessTokenResponse, summary='Get Refresh Users')
+async def refresh_access_token(
+    refresh_token: str = Body(...), 
+    db: Session = Depends(get_db_session)
+):
+    user = auth.verify_token(refresh_token, db, is_refresh=True)
+    access_token = await auth.create_access_token(user)
+    return schemas.AccessTokenResponse(
+        access_token=access_token,
+        refresh_token=refresh_token
+    )

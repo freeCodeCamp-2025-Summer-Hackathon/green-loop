@@ -34,6 +34,7 @@ Jackson @Wayloe
 Tiffany @ Itnerd  
 Enmanuel Torres @sn0wier    
 Donaven @donaven  
+JJ @jjotteson1
 
 **Backend**  
 Abraham @abego2018  

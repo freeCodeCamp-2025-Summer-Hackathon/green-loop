@@ -1,5 +1,5 @@
 import fonts from "../fonts/fonts";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import FormWrapper from "./FormWrapper";
 import {
   Box,
@@ -8,8 +8,10 @@ import {
   CardContent,
   Typography,
   Stack,
-  IconButton,
+  IconButton
 } from "@mui/material";
+
+import Alert from "@mui/material/Alert";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { useNavigate } from "react-router-dom";
@@ -22,10 +24,13 @@ function SignUp() {
   const [currPos, setCurrPos] = useState(0);
   const [errors, setErrors] = useState({});
   const [personalFormHasError, setPersonalFormHasError] = useState(true);
+  const [collegeDetailsFormError, setCollegeDetailsFormError] = useState(true);
+  const [backendResponse, setBackEndResponse] = useState({'detail':''});
+  const [showSucessfullAlert, setShowSucessfullAlert] = useState(null);
   const [collegeDetailsFormData, setCollegeDetailsFormData] = useState({
     college: "",
     major: "",
-    collegeYear: "Freshman",
+    collegeYear: "freshman",
   });
 
   const [personalFormData, setPersonalFormData] = useState({
@@ -98,13 +103,81 @@ function SignUp() {
 
       if (!hasErrors) {
         setPersonalFormHasError(false);
-        alert("you good boss");
         setCurrPos(currPos + 1);
       } else {
         setPersonalFormHasError(true);
       }
     }
   };
+
+  const handleSubmitForm = async (e) => {
+
+    // Perform Form Validation
+    if (currPos === 1){
+      const validationErrors = validateForm();
+      const hasErrors = Object.keys(validationErrors).length > 0;
+      if(!hasErrors) {
+        setCollegeDetailsFormError(false)
+      } else {
+        setCollegeDetailsFormError(true)
+        return;
+      }
+
+    }
+
+    const collegeYearMapping = {
+        notApplicable:null,
+        freshman: 1,
+        sophomore: 2,
+        junior: 3,
+        senior: 4
+      };
+    const body = {
+      username : personalFormData.username,
+      email : personalFormData.email,
+      college_name: collegeDetailsFormData.college, 
+      major: collegeDetailsFormData.major,
+      college_year:collegeYearMapping[collegeDetailsFormData.collegeYear.toLowerCase()],
+      password:personalFormData.confirmPassword
+    };
+    const response = await fetch('http://localhost:8000/api/create_new_user', {
+      method:'POST',
+      headers: {
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json'
+        
+      }, 
+      body:JSON.stringify(body)
+    });
+    if (!response.ok){
+      if(response.status >= 400 && response.status < 500){
+        const data = await response.json()
+        // if its just 400 error(client erros), not 500 erros
+        console.error('Client Error', data.detail|| 'Invalid Request')
+        setBackEndResponse({detail:data.detail});
+        setShowSucessfullAlert(false);
+        
+      } else if (response.status >= 500 ){
+        // server error
+        const data = await response.json()
+        console.error('Server Error');
+        setBackEndResponse({detail:`Server Error | ${data.detail}`});
+        setShowSucessfullAlert(false);
+
+      }
+
+    } else {
+        const data = await response.json();
+        console.log('User Created', data);
+        setBackEndResponse({detail:data.detail})
+        setShowSucessfullAlert(true);
+        setTimeout(() => {
+          navigate('/auth/login');
+          }, 2000); // 2000ms = 2 seconds
+      }
+
+    
+  }
 
   const displayBackButton = () => {
     return (
@@ -119,6 +192,28 @@ function SignUp() {
       </IconButton>
     );
   };
+
+  const handleShowAlert = () => {
+    if (showSucessfullAlert === true){
+      return (
+        <div style={{ width: '20%', margin: '1.25rem auto' }}>
+        <Alert variant="filled" severity="success">
+            {backendResponse.detail}
+        </Alert>
+      </div>
+      )
+    } else if (showSucessfullAlert === false){
+      return (
+        <div style={{ width: '20%', margin: '1.25rem auto' }}>
+        <Alert variant="filled" severity="error">
+            {backendResponse.detail}
+        </Alert>
+      </div>
+      )
+    } else if (showSucessfullAlert === null){
+      return;
+    }
+  }
 
   
 
@@ -135,6 +230,9 @@ function SignUp() {
         collegeDetailsFormData,
       }}
     >
+      {
+        handleShowAlert()
+      }
       <FormWrapper>
          {/* Back Button */}
             {currPos === 1 && displayBackButton()}
@@ -160,7 +258,13 @@ function SignUp() {
             <Button
               variant="contained"
               sx={{ bgcolor: "green", ":hover": { bgcolor: "darkgreen" } }}
-              onClick={() => OnContinueClick()}
+              onClick={function(){
+                if (currPos === 1){
+                  handleSubmitForm();
+                } else {
+                  OnContinueClick();
+                }
+              }}
               fullWidth
             >
               {currPos === 1 ? "Sign Up" : "Next"}
