@@ -24,7 +24,6 @@ function SignIn() {
 
   
   const handleFormChange = (e) => {
-    const name = e.target.name;
     const value = e.target.value;
 
 
@@ -128,10 +127,10 @@ function SignIn() {
                 label="email"
                 name="email"
                 type="email"
-                value={loginCredentials.password || ""}
+                value={loginCredentials.email || ""}
                 onChange={handleFormChange}
-                error={Boolean(errors.password)}
-                helperText={errors.password}
+                error={Boolean(errors.email)}
+                helperText={errors.email}
                 margin="normal"
               />
 
