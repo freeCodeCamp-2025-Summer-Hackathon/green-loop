@@ -5,3 +5,6 @@ backend/routers/__pycache__/
 backend/routers/__pycache__/users.cpython-312.pyc
 backend/study_platform.db
 backend/routers/__pycache__/__init__.cpython-312.pyc
+backend/.env
+.env
+/backend/routers/__pycache__

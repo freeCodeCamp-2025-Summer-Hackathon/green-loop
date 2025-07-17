@@ -3,6 +3,8 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from jose.exceptions import JWTError
+from sqlmodel import Session, select
+from backend.database import get_db_session
 from config import settings
 from models import User
 import datetime as dt
@@ -48,32 +50,34 @@ async def create_tokens_and_refresh_tokens(userObj: models.User):
     }
 
 
-def verify_token(token: str):
+
+def verify_token(token: str, db: Session, is_refresh: bool = False) -> User:
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
+        secret = settings.REFRESH_SECRET_KEY if is_refresh else SECRET_KEY
+        payload = jwt.decode(token, secret, algorithms=[ALGORITHM])
+
+        user_id  = payload.get("id")
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Invalid Token")
+
+        user = db.exec(select(User).where(User.id == user_id)).first()
+        if not user:
+            raise HTTPException(status_code=401, detail="User not found")
+
+        return user
+
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired token",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
-def authenticate_user(token: str = Depends(oauth2_scheme)):
-    try:
-        payload = verify_token(token)
-        username: str = payload.get("user_id")
-        if username is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=" Invalid Token",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        return username
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e),
-        ) from e
+
+
+
+
+def authenticate_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db_session)
+) -> User:
+    return verify_token(token, db, is_refresh=True)

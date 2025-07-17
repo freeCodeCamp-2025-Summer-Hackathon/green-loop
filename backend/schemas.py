@@ -9,6 +9,10 @@ from sqlmodel import Field
 class AccessTokenResponse(BaseModel):
     access_token: str
     refresh_token: str
+
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
 class UserBase(BaseModel):
     username: str = Field(max_length=50)
     email: str = Field(max_length=100)
