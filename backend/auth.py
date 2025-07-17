@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from jose.exceptions import JWTError
 from sqlmodel import Session, select
-from backend.database import get_db_session
+from database import get_db_session
 from config import settings
 from models import User
 import datetime as dt
