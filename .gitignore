@@ -2,3 +2,4 @@
 /backend/SeedData.txt
 /backend/__pycache__/
 /backend/routers/__pycache__/
+backend/routers/__pycache__/users.cpython-312.pyc
