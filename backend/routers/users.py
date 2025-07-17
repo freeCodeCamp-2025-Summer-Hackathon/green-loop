@@ -1,3 +1,4 @@
+from fastapi.security import OAuth2PasswordRequestForm
 import schemas
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
@@ -45,18 +46,16 @@ async def register(
 
 #login endpoint
 @router.post('/token', summary="Get access token", response_model=schemas.AccessTokenResponse, status_code=status.HTTP_200_OK)
-async def login(user: schemas.UserLogin, db_session: Session = Depends(get_db_session)):
-    """  Login user and return access token"""
-
-    # Check if user exists based on email
+async def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db_session: Session = Depends(get_db_session),
+):
+    # form_data.username and form_data.password are the input
     db_user_obj = db_session.exec(
-        select(User).where(User.email == user.email)
+        select(User).where(User.email == form_data.username)  # usually username is email
     ).first()
 
-    if not db_user_obj:
-        raise HTTPException(status_code=400, detail="Invalid email or password")
-
-    if not db_user_obj.verify_password(user.password):
+    if not db_user_obj or not db_user_obj.verify_password(form_data.password):
         raise HTTPException(status_code=400, detail="Invalid email or password")
 
     access_token = await auth.create_access_token(db_user_obj)
@@ -64,8 +63,8 @@ async def login(user: schemas.UserLogin, db_session: Session = Depends(get_db_se
 
     return schemas.AccessTokenResponse(
         access_token=access_token,
-        refresh_token=refresh_token)
-
+        refresh_token=refresh_token,
+    )
 
 
 #Get new access token based on refreshed token 

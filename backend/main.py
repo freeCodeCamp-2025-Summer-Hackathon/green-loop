@@ -2,6 +2,7 @@ from typing import Union
 from fastapi import FastAPI, HTTPException, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from routers.users import router as users_router
+from routers.groups import router as groups_router
 
 app = FastAPI()
 router = APIRouter()
@@ -24,5 +25,6 @@ app.add_middleware(
 )
 
 app.include_router(users_router, prefix="/api", tags=["user"])
+app.include_router(groups_router, prefix="/api/group", tags=["groups"])
 
 

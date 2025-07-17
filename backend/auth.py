@@ -66,7 +66,7 @@ def verify_token(token: str, db: Session, is_refresh: bool = False) -> User:
 
         return user
 
-    except JWTError:
+    except JWTError as E:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired token",
@@ -80,4 +80,4 @@ def authenticate_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db_session)
 ) -> User:
-    return verify_token(token, db, is_refresh=True)
+    return verify_token(token, db, is_refresh=False)
