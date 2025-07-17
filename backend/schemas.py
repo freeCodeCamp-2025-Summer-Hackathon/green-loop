@@ -13,6 +13,12 @@ class AccessTokenResponse(BaseModel):
 
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
+
+class GroupRequest(BaseModel):
+    name: str
+    description : str
+    tags: str | None = None
+
 class UserBase(BaseModel):
     username: str = Field(max_length=50)
     email: str = Field(max_length=100)
@@ -21,6 +27,18 @@ class UserBase(BaseModel):
     college_year: int | None = Field(default=None, ge=1, le=4)
     profile_picture_url: str | None = None
     bio: str = Field(default="Hey There! I'm using Ensemble.", max_length=250)
+
+class GroupInfo(BaseModel):
+    name: str
+    slug: str
+    description: str | None = None
+    tags: str | None = None
+    owner_username: str
+    owner_email: str
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+    total_members: int
+    visibility: str  # "public" or "private"
 
 
 class UserPayLoadJwt(BaseModel):
