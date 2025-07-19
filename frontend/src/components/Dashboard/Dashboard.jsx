@@ -15,6 +15,7 @@ import Groups from "../DashRender/Groups";
 import Threads from "../DashRender/Threads";
 import Resources from "../DashRender/Resources";
 import Dash from "../DashRender/Dash";
+import Header from "./Header";
 
 function Dashboard() {
   const [activeComponent, setActiveComponent] = useState("dash");
@@ -23,11 +24,10 @@ function Dashboard() {
     setActiveComponent(componentName);
   };
   return (
+    
     <Container>
-      <Box>
-        <Typography variant="h2" color="primary" textAlign={"center"}>
-          Ensemble
-        </Typography>
+      <Box border="solid 2px red">
+        <Header />
         <Box>
           <Toolbar>
             <DashNav onNavigate={handleNavigateclick} />

@@ -5,7 +5,7 @@ import { green } from "@mui/material/colors";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Routes, Route } from "react-router-dom";
-import { Dashboard, SignIn, SignUp } from "./components";
+import { Dashboard, Header, Footer, AboutUs, ContactUs, SignIn, SignUp } from "./components";
 
 const theme = createTheme({
   palette: {
@@ -27,7 +27,10 @@ function App() {
         </Routes> */}
         <Routes>
           <Route path="/" element={<Dashboard />}></Route>
+          <Route path="/AboutUs" element={<AboutUs />}></Route>
+          <Route path="/ContactUs" element={<ContactUs />}></Route>
         </Routes>
+        <Footer />
       </div>
     </ThemeProvider>
   );

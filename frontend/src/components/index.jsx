@@ -6,6 +6,9 @@ import Threads from "./DashRender/Threads";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import SignUpFormStepOne from "./SignUpFormStepOne";
+import Footer from "./Dashboard/Footer";
+import AboutUs from "./AboutUs";
+import ContactUs from "./ContactUs";
 
 export {
   Dashboard,
@@ -16,4 +19,7 @@ export {
   SignIn,
   SignUp,
   SignUpFormStepOne,
+  Footer,
+  AboutUs,
+  ContactUs
 };
