@@ -51,7 +51,7 @@ function Groups() {
 
     {
       id: 20,
-      name: "Group Blue ",
+      name: "Group green ",
       description: "Psychology",
       tags: "psychology",
       owner_id: 11,
@@ -82,4 +82,3 @@ function Groups() {
 }
 
 export default Groups;
-
