@@ -72,5 +72,3 @@ fastapi dev main.py
 ---
 
 🎉 That’s it! Your backend is now running locally.
-
-Let me know if you want me to add frontend setup instructions or `.env` file configuration.
