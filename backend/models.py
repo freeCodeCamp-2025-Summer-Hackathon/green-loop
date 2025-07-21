@@ -72,32 +72,7 @@ class Group(SQLModel, table=True):
     # Group can be public or private
     # PublicGroup and PrivateGroup are separate models to handle different access types
     public_group: "PublicGroup"  = Relationship(back_populates="group")
-    private_group: "PrivateGroup" = Relationship(back_populates="group")
-
-
-    def __init__(self, **data):
-        super().__init__(**data)
-        if not self.slug and self.name:
-            self.slug = slugify(self.name)
-    
-
-class PublicGroup(SQLModel, table=True):
-    __tablename__ = "public_group"
-    id: int  = Field(default=None, primary_key=True)
-    group_id: int = Field(foreign_key="group.id")
-
-    group: Group | None = Relationship(back_populates="public_group")
-
-
-class PrivateGroup(SQLModel, table=True):
-    __tablename__ = "private_group"
-    id: int = Field(default=None, primary_key=True)
-    group_id: int = Field(foreign_key="group.id")
-
-    # Access code for private groups
-
-    access_code: str = Field(
-        default=lambda: secrets.token_urlsafe(8),  # generates ~11 chars URL-safe string
+    private_group: "PrivateGroup" = Relationship(back_populalsafe(8),  # generates ~11 chars URL-safe string
         max_length=50
     )
 
@@ -120,8 +95,6 @@ class Thread(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     title: str = Field(max_length=150)
     content: str
-    topic: str  = Field(max_length=100)
-    is_resolved: bool = Field(default=False)
     group_id: int = Field(foreign_key="group.id")
     user_id: int = Field(foreign_key="users.id")
     created_at: datetime = Field(default=datetime.now(dt.UTC))

@@ -19,6 +19,37 @@ class GroupRequest(BaseModel):
     description : str
     tags: str | None = None
 
+class ThreadBase(BaseModel):
+    
+    created_at:datetime.datetime
+    updated_at:datetime.datetime
+    pinned :bool
+    locked : bool
+
+
+class ThreadCreate(ThreadBase):
+    title : str =Field(max_length=150)
+    content : str
+    group_id : int
+    user_id : int
+
+class ThreadResponse(BaseModel):
+    id: int
+    title: str
+    content: str
+    group_id: int
+    user_id: int
+    pinned: bool
+    locked: bool
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
+    model_config = { 
+        'from_attributes': True,
+    }
+
+
+
 class UserBase(BaseModel):
     username: str = Field(max_length=50)
     email: str = Field(max_length=100)

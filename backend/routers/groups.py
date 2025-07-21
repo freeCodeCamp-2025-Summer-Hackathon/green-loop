@@ -3,7 +3,7 @@ import datetime as dt
 import schemas
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlmodel import Session, select
+from sqlmodel import Session, func, select
 from typing import List
 from models import Group, User, GroupUser, PrivateGroup, PublicGroup  # import your models
 from database import get_db_session  # your DB session dependency
