@@ -20,28 +20,28 @@ def create_thread(
     current_user: User = Depends(auth.authenticate_user)
 ):
     # 1. Check if group exists
-    group = db.exec(select(Group).where(Group.id == thread_data.group_id)).first()
+    group = db.exec(select(Group).where(Group.slug == thread_data.group_slug)).first()
     if not group:
         raise HTTPException(status_code=404, detail="Group not found")
 
     # 2. Check if user is a member of the group
     membership = db.exec(
         select(GroupUser).where(
-            GroupUser.group_id == thread_data.group_id,
+            GroupUser.group_id == group.id,
             GroupUser.user_id == current_user.id
         )
     ).first()
-    if not membership:
+
+
+    if not membership and current_user.id != group.owner_id:
         raise HTTPException(status_code=403, detail="You are not a member of this group")
 
     # 3. Create the thread
     thread = Thread(
         title=thread_data.title,
         content=thread_data.content,
-        group_id=thread_data.group_id,
-        user_id=current_user.id,
-        created_at=thread_data.created_at,
-        updated_at=thread_data.updated_at,
+        group_id=group.id,
+    user_id=current_user.id,
         pinned=thread_data.pinned,
         locked=thread_data.locked
     )

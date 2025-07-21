@@ -14,32 +14,32 @@ class AccessTokenResponse(BaseModel):
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
 
-class GroupRequest(BaseModel):
+class GroupCreate(BaseModel):
     name: str
     description : str
     tags: str | None = None
+    is_private: bool | None = False
+
 
 class ThreadBase(BaseModel):
     
-    created_at:datetime.datetime
-    updated_at:datetime.datetime
-    pinned :bool
-    locked : bool
+    pinned :bool = False
+    locked : bool = False
 
 
 class ThreadCreate(ThreadBase):
     title : str =Field(max_length=150)
     content : str
-    group_id : int
-    user_id : int
+    group_slug : str
 
 class ThreadResponse(BaseModel):
     id: int
     title: str
     content: str
     group_id: int
+    group_slug: str
     user_id: int
-    pinned: bool
+    pinned: bool 
     locked: bool
     created_at: datetime.datetime
     updated_at: datetime.datetime

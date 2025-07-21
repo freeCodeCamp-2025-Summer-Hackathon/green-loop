@@ -5,7 +5,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, func, select
 from typing import List
-from models import Group, User, GroupUser, PrivateGroup, PublicGroup  # import your models
+from models import Group, User, GroupUser # Import your models
 from database import get_db_session  # your DB session dependency
 from utils import slugify  # your user auth dependency
 
@@ -16,9 +16,9 @@ router = APIRouter()
 
 
 
-@router.post("/create_group", response_model=Group)
+@router.post("/create_group")
 def create_group(
-    group: schemas.GroupRequest, 
+    group: schemas.GroupCreate, 
     db_session: Session = Depends(get_db_session), 
     current_user: User = Depends(auth.authenticate_user)
 ):
@@ -32,6 +32,7 @@ def create_group(
     # Create Group ORM object
     new_group = Group(
         name=group.name,
+        is_private=group.is_private,
         description=group.description,
         tags=group.tags,
         owner_id=current_user.id,
@@ -44,7 +45,18 @@ def create_group(
     db_session.add(new_group)
     db_session.commit()
     db_session.refresh(new_group)
-    return {'detail': 'Group Created Sucessfully', 'Group_obj': new_group}
+
+
+    # Add owner to group as a member in GroupUser table
+    owner_group_link = GroupUser(
+        user_id=current_user.id,
+        group_id=new_group.id,
+        role="owner",  # Or "admin" if you want to use a hierarchy
+        joined_at=datetime.now(dt.UTC)
+    )
+    db_session.add(owner_group_link)
+    db_session.commit()
+    return {'detail': 'Group Created Sucessfully', 'group_slug': new_group.slug}
 
 
 
@@ -115,7 +127,7 @@ def get_group_info(
     ).first()
 
     # Determine visibility
-    visibility = "public" if group.public_group else "private"
+    visibility = "public" if not group.is_private else "private"
 
     return schemas.GroupInfo(
         name=group.name,
