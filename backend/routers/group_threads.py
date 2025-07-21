@@ -7,7 +7,6 @@ from typing import Annotated
 from models import Thread, GroupUser, Group, User
 from schemas import ThreadCreate
 from database import get_db_session  # your DB session dependency
-from dependencies import get_current_user  # <-- JWT auth to get current user
 
 router = APIRouter()
 
