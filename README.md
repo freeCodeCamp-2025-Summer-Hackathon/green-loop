@@ -1,43 +1,76 @@
-# green-loop
-Repository for the green-loop team's work.
 
-**Project Name: StudyCircle**    
-**Naomi's Instuctions**  
-A collaborative study group platform.
+---
 
-User Stories:
-As a student, I can create or join study groups by topic.  
-As a group member, I can post questions, resources, and meeting times.  
-As a user, I can track which resources I've reviewed.  
-Hello @green-loop~! Here is your project for the Hackathon! Remember, the user stories are only to springboard your ideation, and are not a requirement. Excited to see what you all achieve!  
+# 🧠 Ensemble — Green-Loop Team
 
-Green-Loop
-We as team have decided to create a study group for college students. Users will be able to create their own Study Groups, chat in the groups, create discussions.
+**A collaborative study group platform for college students.**
+Created as part of the Hackathon by Team Green-Loop.
 
-When signing up for study groups users will need to include the following:
+---
 
-Email 
+## 📚 User Stories
 
-Username  
+* As a student, I can create or join study groups by topic.
+* As a group member, I can post questions, resources, and meeting times.
+* As a user, I can track which resources I’ve reviewed.
 
-Password
+---
 
-**Frontend Code**  
-React (Javascript, HTML, CSS)   
-**Backend Code**  
-Node.js
+## 🧪 Tech Stack
 
-# **The Team**  
-**Frontend**  
-Finian Knepper @finianknepper  
-Jackson @Wayloe   
-Tiffany @ Itnerd  
-Enmanuel Torres @sn0wier    
-Donaven @donaven  
-JJ @jjotteson1
+**Frontend:** React (JavaScript, HTML, CSS)
+**Backend:** FastAPI (Python)
 
-**Backend**  
-Abraham @abego2018  
-Jamike @bro9872/@johno  
-Enmanuel Torres @sn0wier  
-Donaven @donaven  
+---
+
+## 🧑‍💻 The Team
+
+### 🔵 Frontend
+
+* Finian Knepper — `@finianknepper`
+* Jackson — `@Wayloe`
+* Tiffany — `@Itnerd`
+* Enmanuel Torres — `@sn0wier`
+* Donaven — `@donaven`
+* JJ — `@jjotteson1`
+
+### 🟢 Backend
+
+* Abraham — `@abego2018`
+* Jamike — `@bro9872` / `@johno`
+* Enmanuel Torres — `@sn0wier`
+* Donaven — `@donaven`
+
+---
+
+## 🚀 How to Run the Backend Locally
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-org/studycircle.git
+cd studycircle/backend
+```
+
+### 2. Initialize the database (Only once)
+
+```bash
+python database.py
+```
+
+> This will run SQL commands to create the required tables.
+> ⚠️ You only need to do this **once** after cloning or resetting your environment.
+
+### 3. Run the FastAPI development server
+
+```bash
+fastapi dev main.py
+```
+
+`main.py` is the **entry point** of the backend application.
+
+---
+
+🎉 That’s it! Your backend is now running locally.
+
+Let me know if you want me to add frontend setup instructions or `.env` file configuration.
