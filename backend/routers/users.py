@@ -79,3 +79,9 @@ async def refresh_access_token(
         access_token=access_token,
         refresh_token=refresh_token
     )
+
+@router.get('/user/me', response_model=schemas.UserBase, summary='Get current authenticated user')
+async def get_current_user_info(
+    current_user: User = Depends(auth.authenticate_user)
+):
+    return current_user
