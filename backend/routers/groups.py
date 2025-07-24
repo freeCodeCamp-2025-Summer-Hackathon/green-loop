@@ -181,3 +181,40 @@ def get_user_groups(
         group_info_list.append(group_info)
 
     return group_info_list
+
+
+#get all the group user is the owner of 
+@router.get("/my_groups_owned", response_model=List[schemas.GroupInfo])
+def get_owned_groups(
+    session: Session = Depends(get_db_session),
+    current_user: User = Depends(auth.authenticate_user)
+):
+    groups = session.exec(
+        select(Group).where(Group.owner_id == current_user.id)
+    ).all()
+
+    if not groups:
+        return []
+
+    group_infos = []
+    for group in groups:
+        member_count = session.exec(
+            select(func.count()).where(GroupUser.group_id == group.id)
+        ).first()
+
+        group_infos.append(
+            schemas.GroupInfo(
+                name=group.name,
+                slug=group.slug,
+                description=group.description,
+                tags=group.tags,
+                owner_email=current_user.email,
+                owner_username=current_user.username,
+                created_at=group.created_at,
+                updated_at=group.updated_at,
+                total_members=member_count,
+                visibility="private" if group.is_private else "public"
+            )
+        )
+
+    return group_infos
