@@ -23,7 +23,7 @@ export function isTokenExpired() {
     return true; // expired if no token or timestamp invalid
   }
 
-  // return true if expored
+  // return true if expired
   if (now - timestamp > EXPIRY_MS){
     return true
   } else {
@@ -50,7 +50,6 @@ export async function fetchUserDetails() {
 
 
 export async function refreshToken() {
-    alert('calling refresh token')
   const refreshToken = localStorage.getItem("refresh_token");
   if (!refreshToken) throw new Error("Refresh token not found");
 

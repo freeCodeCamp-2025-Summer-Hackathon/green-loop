@@ -9,7 +9,7 @@ export function useAuthGuard() {
     const token = localStorage.getItem("access_token");
     const refresh = localStorage.getItem("refresh_token");
 
-    if (token && refresh && isTokenExpired()) {
+    if (token && refresh && !(isTokenExpired())) {
       return; // if token and refresh don't do anythinf
     }
 
@@ -20,11 +20,14 @@ export function useAuthGuard() {
 
     if (isTokenExpired()) {
       refreshToken()
-        .catch(() => {
-          localStorage.removeItem("access_token");
-          localStorage.removeItem("refresh_token");
-          navigate("/auth/login");
+        .catch((refreshError) => {
+            console.log('refresh error', refreshError)
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
+            navigate("/auth/login");
         });
+    } else {
+        navigate("/dashboard")
     }
   }, [navigate]);
 }

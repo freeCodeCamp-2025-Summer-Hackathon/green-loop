@@ -7,7 +7,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { SignIn, SignUp, Dashboard } from "./components";
 import { useAuthGuard } from "./hooks/useAuthGuard.js";
-
 const theme = createTheme({
   palette: {
     primary: {
