@@ -62,10 +62,20 @@ function Threads() {
 
   return (
     <Box p={2}>
-      <Typography variant="h5" gutterBottom>
-        My Threads
-      </Typography>
-
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h5" gutterBottom>
+          Threads
+        </Typography>
+        <Box display="flex" gap={1}>
+          <TextField size="small" placeholder="Search..." />
+          <Button variant="contained">Search</Button>
+        </Box>
+      </Box>
       <List component={Paper}>
         {threadsArray.map((thread) => (
           <Box key={thread.id}>
@@ -75,10 +85,11 @@ function Threads() {
                 onClick={() => handleSelect(thread.id)}
                 sx={{
                   bgcolor:
-                    thread.id === selectedThreadId ? "lightgreen" : "lightgrey",
+                    thread.id === selectedThreadId ? "lightgreen" : "white",
                   borderRadius: 1,
                   mx: 1,
                   my: 0.5,
+                  boxShadow: 2,
                   "&:hover": {
                     bgcolor:
                       thread.id === selectedThreadId
@@ -101,6 +112,7 @@ function Threads() {
                 mx={2}
                 mt={1}
                 borderRadius={1}
+                boxShadow={2}
                 bgcolor="#dedcdcff"
               >
                 <Typography variant="subtitle1">Comments:</Typography>
