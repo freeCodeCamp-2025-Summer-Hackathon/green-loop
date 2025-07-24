@@ -27,7 +27,6 @@ Created as part of the Hackathon by Team Green-Loop.
 
 ### 🔵 Frontend
 
-* Finian Knepper — `@finianknepper`
 * Jackson — `@Wayloe`
 * Tiffany — `@Itnerd`
 * Enmanuel Torres — `@sn0wier`
