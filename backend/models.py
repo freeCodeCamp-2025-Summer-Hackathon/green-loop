@@ -9,7 +9,7 @@ from secrets import token_urlsafe
 
 
 class User(SQLModel, table=True):
-    __tablename__ = "user"
+    __tablename__ = "users"
     id: int = Field(default=None, primary_key=True)
     username: str = Field(index=True, unique=True, max_length=50)
     email: str = Field(unique=True, max_length=100)
