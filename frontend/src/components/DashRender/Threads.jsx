@@ -73,6 +73,21 @@ function Threads() {
               <ListItemButton
                 selected={thread.id === selectedThreadId}
                 onClick={() => handleSelect(thread.id)}
+                sx={{
+                  bgcolor:
+                    thread.id === selectedThreadId ? "lightgreen" : "lightgrey",
+                  borderRadius: 1,
+                  mx: 1,
+                  my: 0.5,
+                  "&:hover": {
+                    bgcolor:
+                      thread.id === selectedThreadId
+                        ? "primary.main"
+                        : "action.hover",
+                    color: thread.id === selectedThreadId ? "black" : "inherit",
+                  },
+                  color: thread.id === selectedThreadId ? "green" : "inherit",
+                }}
               >
                 <ListItemText primary={thread.title} />
               </ListItemButton>
@@ -80,7 +95,14 @@ function Threads() {
 
             {/* Render comments directly below selected thread */}
             {selectedThreadId === thread.id && (
-              <Box pl={4} py={1} bgcolor="#f9f9f9">
+              <Box
+                pl={4}
+                py={1}
+                mx={2}
+                mt={1}
+                borderRadius={1}
+                bgcolor="#dedcdcff"
+              >
                 <Typography variant="subtitle1">Comments:</Typography>
                 {thread.comments.length > 0 ? (
                   thread.comments.map((comment, index) => (
