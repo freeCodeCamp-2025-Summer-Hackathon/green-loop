@@ -16,8 +16,8 @@ function DashNav({ onNavigate }) {
     { key: "dash", label: "Dashboard" },
     { key: "mygroups", label: "My Groups" },
     { key: "groups", label: "Groups" },
-    { key: "threads", label: "Threads" },
-    { key: "resources", label: "Resources" },
+    { key: "threads", label: "My Threads" },
+    { key: "resources", label: "My Resource" },
   ];
 
   return (

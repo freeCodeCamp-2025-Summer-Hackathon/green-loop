@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Paper,
@@ -6,124 +6,148 @@ import {
   Chip,
   Stack,
   Box,
-  TextField,
-  Button,
+  CircularProgress,
 } from "@mui/material";
 
-function Groups() {
-  const cardData = [
-    {
-      id: 1,
-      name: "Group 1",
-      description: "Math Class review",
-      tags: "math",
-      owner_id: 10,
-    },
-    {
-      id: 2,
-      name: "Group 2",
-      description: "English Class review",
-      tags: "english",
-      owner_id: 11,
-    },
-    {
-      id: 3,
-      name: "Group 3",
-      description: "Chemistry",
-      tags: "chemistry",
-      owner_id: 11,
-    },
-    {
-      id: 24,
-      name: "Group 4",
-      description: "Spanish",
-      tags: "spanish",
-      owner_id: 11,
-    },
-    {
-      id: 20,
-      name: "Group 5",
-      description: "Psychology",
-      tags: "psychology",
-      owner_id: 11,
-    },
-  ];
+  function Groups() {
+    const [groups, setGroups] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+    async function fetchGroups() {
+      const token = localStorage.getItem("access_token"); // Or use context/store if that's where it's stored
+
+      try {
+        const response = await fetch("http://localhost:8000/api/group/my_groups", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setGroups(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchGroups();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mt: 6,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Typography color="error" align="center" sx={{ mt: 6 }}>
+        Error loading groups: {error}
+      </Typography>
+    );
+  }
 
   return (
     <Box sx={{ fontFamily: "'Inter', sans-serif" }}>
-      <Box
-        display={"flex"}
-        justifyContent={"space-between"}
-        alignItems={"center"}
-        mb={2}
+      <Typography
+        variant="h4"
+        component="h2"
+        gutterBottom
+        sx={{ mb: 3, fontWeight: 600 }}
       >
-        <Typography
-          variant="h5"
-          component="h2"
-          gutterBottom
-          sx={{ mb: 3, fontWeight: 600 }}
-        >
-          Groups
+        Your Groups
+      </Typography>
+
+      {groups.length === 0 ? (
+        <Typography color="text.secondary" align="center">
+          You are not a member of any groups yet.
         </Typography>
-        <Box display="flex" gap={1}>
-          <TextField size="small" placeholder="Search..." />
-          <Button variant="contained">Search</Button>
-        </Box>
-      </Box>
-      <Grid container spacing={3}>
-        {cardData.map(({ id, name, description, tags, owner_id }) => (
-          <Grid item xs={12} sm={6} md={6} lg={4} key={id}>
-            <Paper
-              elevation={4}
-              sx={{
-                p: 3,
-                borderRadius: 3,
-                minHeight: 200,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                cursor: "pointer",
-                transition: "transform 0.2s ease",
-                "&:hover": {
-                  boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
-                  transform: "translateY(-4px)",
-                },
-              }}
-            >
-              <Stack spacing={1}>
-                <Typography
-                  variant="h6"
-                  component="h3"
-                  fontWeight={600}
-                  gutterBottom
+      ) : (
+        <Grid container spacing={3}>
+          {groups.map(
+            ({
+              slug,
+              name,
+              description,
+              tags,
+              owner_username,
+              total_members,
+              visibility,
+            }) => (
+              <Grid item xs={12} sm={6} md={6} lg={4} key={slug}>
+                <Paper
+                  elevation={4}
+                  sx={{
+                    p: 3,
+                    borderRadius: 3,
+                    minHeight: 200,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    cursor: "pointer",
+                    transition: "transform 0.2s ease",
+                    "&:hover": {
+                      boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
+                      transform: "translateY(-4px)",
+                    },
+                  }}
                 >
-                  {name}
-                </Typography>
+                  <Stack spacing={1}>
+                    <Typography
+                      variant="h6"
+                      component="h3"
+                      fontWeight={600}
+                      gutterBottom
+                    >
+                      {name}
+                    </Typography>
 
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ minHeight: 60 }}
-                >
-                  {description}
-                </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ minHeight: 60 }}
+                    >
+                      {description || "No description"}
+                    </Typography>
 
-                <Chip
-                  label={tags}
-                  size="small"
-                  color="success"
-                  variant="outlined"
-                  sx={{ width: "fit-content" }}
-                />
-              </Stack>
+                    {tags && (
+                      <Chip
+                        label={tags}
+                        size="small"
+                        color="success"
+                        variant="outlined"
+                        sx={{ width: "fit-content" }}
+                      />
+                    )}
+                  </Stack>
 
-              <Typography variant="caption" color="text.secondary" mt={2}>
-                Created by User #{owner_id}
-              </Typography>
-            </Paper>
-          </Grid>
-        ))}
-      </Grid>
+                  <Typography variant="caption" color="text.secondary" mt={2}>
+                    Created by {owner_username} | Members: {total_members} |{" "}
+                    {visibility}
+                  </Typography>
+                </Paper>
+              </Grid>
+            )
+          )}
+        </Grid>
+      )}
     </Box>
   );
 }

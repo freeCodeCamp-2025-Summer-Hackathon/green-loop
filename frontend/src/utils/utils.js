@@ -17,7 +17,7 @@ export function isTokenExpired() {
   const token = localStorage.getItem("access_token");
   const timestamp = parseInt(localStorage.getItem("token_timestamp"), 10);
   const now = Date.now();
-  const EXPIRY_MS = 2 * 60 * 1000; // 2 minutes
+  const EXPIRY_MS = 30 * 60 * 1000; // 2 minutes
 
   if (!token || isNaN(timestamp)) {
     return true; // expired if no token or timestamp invalid
