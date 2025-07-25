@@ -2,34 +2,93 @@ import React, { useState } from "react";
 import {
   Box,
   Typography,
-  Card,
-  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
+  Button,
   useTheme,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+  Autocomplete,
+  Chip,
+  Checkbox,
+  FormControlLabel
 } from "@mui/material";
+import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
+
+
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+
+import Groups from "./Groups/Groups";
 
 function Dash({ message }) {
+  const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
 
+  // Dialog open state
   const [openCreate, setOpenCreate] = useState(false);
   const [openJoin, setOpenJoin] = useState(false);
 
+  // Form state
   const [groupName, setGroupName] = useState("");
   const [groupDesc, setGroupDesc] = useState("");
   const [joinCode, setJoinCode] = useState("");
+  const [groupTags, setGroupTags] = useState([]);
+  const [isPrivate, setIsPrivate] = useState(false);
+
+  // navigate 
+
+  const navigate = useNavigate();
+
+
+  // Predefined tags for group creation
+  const predefinedTags = [
+    "Math",
+    "Science",
+    "English",
+    "History",
+    "Programming",
+    "Art",
+    "Music",
+    "Physics",
+    "Chemistry",
+  ];
 
   const handleClose = () => {
     setOpenCreate(false);
     setOpenJoin(false);
   };
 
-  const handleCreate = () => {
-    console.log("Create group:", groupName, groupDesc);
+  const handleCreate = async () => {
     // TODO: API call here
+    const token = localStorage.getItem("access_token");
+    const response = await fetch("http://localhost:8000/api/group/create_group", {
+      method: "POST",    
+      headers: {
+        "Content-Type":"application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name:groupName, 
+        description:groupDesc, 
+        tags:groupTags.join(','),
+        is_private:isPrivate
+      })
+    });
+
+    if (!response.ok) {
+        throw new Error(`Create failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      enqueueSnackbar(data.detail, { variant: "success" });
+      setTimeout(() => navigate(`/groups/${data.group_slug}`), 5000)
+
     handleClose();
   };
 
@@ -39,43 +98,51 @@ function Dash({ message }) {
     handleClose();
   };
 
+  const actions = [
+    {
+      icon: <AddCircleOutlineIcon />,
+      name: "Create Group",
+      onClick: () => setOpenCreate(true),
+    },
+    {
+      icon: <GroupAddIcon />,
+      name: "Join Group",
+      onClick: () => setOpenJoin(true),
+    },
+  ];
+
   return (
-    <Box display="flex" justifyContent="center" mt={8} px={2}>
-      <Card
+    <Box sx={{ position: "relative", minHeight: "85vh", px: 3, pt: 3 }}>
+      {/* Heading */}
+      {/* Groups list */}
+      <Groups />
+
+      {/* Floating SpeedDial */}
+      <SpeedDial
+        ariaLabel="Group Actions"
         sx={{
-          width: "100%",
-          maxWidth: 600,
-          p: 5,
-          borderRadius: 5,
-          boxShadow: 6,
-          textAlign: "center",
+          position: "fixed",
+          bottom: 32,
+          right: 32,
+          "& .MuiFab-primary": {
+            width: 70,
+            height: 70,
+            boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+          },
         }}
+        icon={<SpeedDialIcon />}
+        direction="up"
       >
-       
-        <Typography variant="h6" color="text.secondary">
-        Join or create a study group to collaborate and learn with peers.
-        </Typography>
-
-
-        <Box mt={5} display="flex" justifyContent="center" gap={3}>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={() => setOpenCreate(true)}
-          >
-            Create Group
-          </Button>
-          <Button
-            variant="outlined"
-            color="primary"
-            size="large"
-            onClick={() => setOpenJoin(true)}
-          >
-            Join Group
-          </Button>
-        </Box>
-      </Card>
+        {actions.map((action) => (
+          <SpeedDialAction
+            key={action.name}
+            icon={action.icon}
+            tooltipTitle={action.name}
+            onClick={action.onClick}
+            sx={{ "& .MuiTooltip-tooltip": { fontSize: "1.1rem" } }}
+          />
+        ))}
+      </SpeedDial>
 
       {/* Create Group Dialog */}
       <Dialog
@@ -111,6 +178,50 @@ function Dash({ message }) {
             InputProps={{
               style: { color: "#fff" },
             }}
+          />
+
+          <Autocomplete
+            multiple
+            options={predefinedTags}
+            value={groupTags}
+            onChange={(event, newValue) => setGroupTags(newValue)}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip
+                  variant="outlined"
+                  label={option}
+                  {...getTagProps({ index })}
+                  key={option}
+                  sx={{ color: "#fff", borderColor: "#4caf50" }}
+                />
+              ))
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Tags"
+                placeholder="Select tags"
+                margin="normal"
+                InputLabelProps={{ style: { color: "#ccc" } }}
+                InputProps={{
+                  ...params.InputProps,
+                  style: { color: "#fff" },
+                }}
+              />
+            )}
+            sx={{ mt: 2 }}
+          />
+
+          <FormControlLabel
+            control={
+            <Checkbox
+            checked={isPrivate}
+            onChange={(e) => setIsPrivate(e.target.checked)}
+            sx={{ color: "#fff" }}
+            />
+            }
+            label="Make Group Private"
+            sx={{ color: "#ccc", mt: 1 }}
           />
         </DialogContent>
         <DialogActions>

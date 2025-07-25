@@ -15,7 +15,6 @@ function DashNav({ onNavigate }) {
   const menuItems = [
     { key: "dash", label: "Dashboard" },
     { key: "mygroups", label: "My Groups" },
-    { key: "groups", label: "Groups" },
     { key: "threads", label: "My Threads" },
     { key: "resources", label: "My Resource" },
   ];

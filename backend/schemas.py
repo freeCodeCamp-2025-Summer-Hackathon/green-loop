@@ -37,16 +37,11 @@ class ThreadResponse(BaseModel):
     title: str
     content: str
     group_id: int
-    group_slug: str
     user_id: int
     pinned: bool 
     locked: bool
     created_at: datetime.datetime
     updated_at: datetime.datetime
-
-    model_config = { 
-        'from_attributes': True,
-    }
 
 
 

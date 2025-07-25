@@ -9,6 +9,8 @@ import {
   Paper,
   ListItem,
   ListItemText,
+  Divider,
+  useTheme,
 } from "@mui/material";
 
 const threadsArray = [
@@ -20,8 +22,8 @@ const threadsArray = [
     group_slug: "english",
     user_id: 3,
     comments: [
-      "Great post! Want more info",
-      "I don't know about that. Check your info",
+      { username: "jane_doe", college: "NYU", message: "Great post! Want more info" },
+      { username: "mike21", college: "UCLA", message: "I don't know about that. Check your info" },
     ],
   },
   {
@@ -31,7 +33,10 @@ const threadsArray = [
     group_id: "group2",
     group_slug: "english",
     user_id: 3,
-    comments: ["Helpful insights!", "Can you expand on this?"],
+    comments: [
+      { username: "sarah_b", college: "Columbia", message: "Helpful insights!" },
+      { username: "tobi_e", college: "UT Austin", message: "Can you expand on this?" },
+    ],
   },
   {
     id: 3,
@@ -40,7 +45,10 @@ const threadsArray = [
     group_id: "group1",
     group_slug: "math",
     user_id: 3,
-    comments: ["I totally agree!", "Need more explanation here."],
+    comments: [
+      { username: "leonardM", college: "MIT", message: "I totally agree!" },
+      { username: "keishaQ", college: "Stanford", message: "Need more explanation here." },
+    ],
   },
   {
     id: 4,
@@ -55,28 +63,30 @@ const threadsArray = [
 
 function Threads() {
   const [selectedThreadId, setSelectedThreadId] = useState(null);
+  const theme = useTheme();
 
   const handleSelect = (id) => {
     setSelectedThreadId(id === selectedThreadId ? null : id);
   };
 
   return (
-    <Box p={2}>
+    <Box p={3} maxWidth="800px" mx="auto">
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        mb={2}
+        mb={3}
       >
-        <Typography variant="h5" gutterBottom>
-          Threads
+        <Typography variant="h4" fontWeight={600}>
+          Discussion Threads
         </Typography>
         <Box display="flex" gap={1}>
           <TextField size="small" placeholder="Search..." />
           <Button variant="contained">Search</Button>
         </Box>
       </Box>
-      <List component={Paper}>
+
+      <List component={Paper} sx={{ borderRadius: 2, boxShadow: 3 }}>
         {threadsArray.map((thread) => (
           <Box key={thread.id}>
             <ListItem disablePadding>
@@ -85,45 +95,61 @@ function Threads() {
                 onClick={() => handleSelect(thread.id)}
                 sx={{
                   bgcolor:
-                    thread.id === selectedThreadId ? "lightgreen" : "white",
-                  borderRadius: 1,
+                    thread.id === selectedThreadId ? "rgba(56, 142, 60, 0.15)" : "white",
+                  borderRadius: 2,
                   mx: 1,
                   my: 0.5,
-                  boxShadow: 2,
+                  transition: "0.2s",
                   "&:hover": {
-                    bgcolor:
-                      thread.id === selectedThreadId
-                        ? "primary.main"
-                        : "action.hover",
-                    color: thread.id === selectedThreadId ? "black" : "inherit",
+                    bgcolor: "action.hover",
                   },
-                  color: thread.id === selectedThreadId ? "green" : "inherit",
                 }}
               >
-                <ListItemText primary={thread.title} />
+                <ListItemText
+                  primary={thread.title}
+                  primaryTypographyProps={{
+                    fontWeight: 500,
+                    fontSize: "1.1rem",
+                  }}
+                />
               </ListItemButton>
             </ListItem>
 
-            {/* Render comments directly below selected thread */}
             {selectedThreadId === thread.id && (
               <Box
-                pl={4}
-                py={1}
+                px={3}
+                py={2}
                 mx={2}
-                mt={1}
-                borderRadius={1}
-                boxShadow={2}
-                bgcolor="#dedcdcff"
+                mb={2}
+                borderRadius={2}
+                bgcolor="#f4fdf4"
+                boxShadow={1}
               >
-                <Typography variant="subtitle1">Comments:</Typography>
+                <Typography
+                  variant="subtitle1"
+                  fontWeight={600}
+                  mb={1}
+                  color="success.dark"
+                >
+                  Comments:
+                </Typography>
+                <Divider />
                 {thread.comments.length > 0 ? (
                   thread.comments.map((comment, index) => (
-                    <Typography key={index} variant="body2" sx={{ mt: 0.5 }}>
-                      • {comment}
-                    </Typography>
+                    <Box key={index} mt={1.5}>
+                      <Typography
+                        variant="body2"
+                        sx={{ fontWeight: 500, color: theme.palette.success.main }}
+                      >
+                        {comment.username} | {comment.college}:
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {comment.message}
+                      </Typography>
+                    </Box>
                   ))
                 ) : (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" mt={1}>
                     No comments yet.
                   </Typography>
                 )}
@@ -132,14 +158,6 @@ function Threads() {
           </Box>
         ))}
       </List>
-
-      {/* Optional: Add new thread */}
-      <Box mt={4}>
-        <TextField fullWidth label="New Thread Title" />
-        <Button variant="contained" sx={{ mt: 1 }}>
-          Add Thread
-        </Button>
-      </Box>
     </Box>
   );
 }

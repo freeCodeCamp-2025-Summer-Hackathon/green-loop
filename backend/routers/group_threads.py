@@ -14,7 +14,7 @@ router = APIRouter()
 
 # Create thread
 @router.post("/create_thread", status_code=status.HTTP_201_CREATED)
-def create_thread(
+async def create_thread(
     thread_data: ThreadCreate,
     db: Session = Depends(get_db_session),
     current_user: User = Depends(auth.authenticate_user)
@@ -57,8 +57,8 @@ def create_thread(
 
 
 # list all the threads in a group
-@router.get("/groups/{group_slug}/threads", status_code=status.HTTP_200_OK, response_model=List[schemas.ThreadResponse])
-def list_threads_in_group(
+@router.get("/{group_slug}", status_code=status.HTTP_200_OK, response_model=List[schemas.ThreadResponse])
+async def list_threads_in_group(
     group_slug: str,
     db: Session = Depends(get_db_session),
     current_user: User = Depends(auth.authenticate_user)
@@ -89,7 +89,7 @@ def list_threads_in_group(
 
 # get specific thread details
 @router.get("/threads/{thread_id}", response_model=schemas.ThreadResponse, status_code=status.HTTP_200_OK)
-def get_thread_detail(
+async def get_thread_detail(
     thread_id: int,
     db: Session = Depends(get_db_session),
     current_user: User = Depends(auth.authenticate_user)

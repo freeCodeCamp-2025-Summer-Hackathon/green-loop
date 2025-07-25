@@ -8,11 +8,11 @@ import {
   Divider,
 } from "@mui/material";
 import DashNav from "./DashNav";
-import Groups from "../DashRender/Groups";
-import Threads from "../DashRender/Threads";
+import Groups from "../DashRender/Groups/Groups";
+import Threads from "../DashRender/Threads/Threads";
 import Resources from "../DashRender/Resources";
 import Dash from "../DashRender/Dash";
-import UserGroups from "../DashRender/UserGroups";
+import UserGroups from "../DashRender/Groups/UserGroups";
 import { useNavigate } from "react-router-dom";
 import { validateToken, isTokenExpired, fetchUserDetails } from "../../utils/utils";
 
@@ -55,8 +55,8 @@ function Dashboard() {
     switch (activeComponent) {
       case "dash":
         return <Dash message={message} />;
-      case "groups":
-        return <Groups />;
+      // case "groups":
+      //   return <Groups />;
       case "threads":
         return <Threads />;
       case "resources":

@@ -111,7 +111,6 @@ class Thread(SQLModel, table=True):
     content: str
     is_resolved: bool = Field(default=False)
     group_id: int = Field(foreign_key="groups.id")
-    group_slug: str 
     user_id: int = Field(foreign_key="users.id")
     created_at: datetime = Field(default=datetime.now(dt.UTC))
     updated_at: datetime = Field(default=datetime.now(dt.UTC))

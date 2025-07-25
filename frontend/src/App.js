@@ -7,6 +7,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { SignIn, SignUp, Dashboard } from "./components";
 import { useAuthGuard } from "./hooks/useAuthGuard.js";
+import GroupDetailsPage from './components/DashRender/Groups/GroupDetailsPage.jsx'
+import { SnackbarProvider } from 'notistack';
+
+
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -21,17 +26,21 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* Optional: resets default browser styles */}
       <div>
-        <Routes>
-         <Route path="/" element={<Navigate to="/auth/login" replace />} />
-          <Route path="/auth/login" element={<SignIn/>} />
-          <Route path="/auth/signup" element={
-            <SignUp/>
-          } />
-          <Route path="/dashboard" element={
-            <Dashboard
-            />
-          } />
-        </Routes>
+        <SnackbarProvider>
+          <Routes>
+          <Route path="/" element={<Navigate to="/auth/login" replace />} />
+            <Route path="/auth/login" element={<SignIn/>} />
+            <Route path="/auth/signup" element={
+              <SignUp/>
+            } />
+            <Route path="/dashboard" element={
+              <Dashboard
+              />
+            } />
+
+            <Route path="/groups/:group_slug" element={<GroupDetailsPage/>}/>
+          </Routes>
+        </SnackbarProvider>
       </div>
     </ThemeProvider>
   );
