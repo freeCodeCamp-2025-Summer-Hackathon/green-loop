@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Typography,
   TextField,
@@ -7,8 +7,6 @@ import {
   ListItemButton,
   List,
   Paper,
-  ListItem,
-  ListItemText,
   Divider,
   useTheme,
   CircularProgress,
@@ -17,7 +15,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 
@@ -28,40 +25,45 @@ function Threads({ group_slug }) {
   const [error, setError] = useState(null);
   const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
-
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
+  const [newComment, setNewComment] = useState("");
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
   const theme = useTheme();
 
-  useEffect(() => {
-    async function fetchThreads() {
-      try {
-        const token = localStorage.getItem("access_token");
-        const response = await fetch(`http://localhost:8000/api/group/thread/${group_slug}`, {
+  const fetchThreads = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(
+        `http://localhost:8000/api/group/thread/${group_slug}`,
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch threads: ${response.statusText}`);
         }
+      );
 
-        const data = await response.json();
-        setThreads(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch threads: ${response.statusText}`);
       }
-    }
 
-    fetchThreads();
+      const data = await response.json();
+      setThreads(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, [group_slug]);
+
+  useEffect(() => {
+    fetchThreads();
+  }, [fetchThreads]);
 
   const handleSelect = (id) => {
     setSelectedThreadId(id === selectedThreadId ? null : id);
+    setNewComment("");
   };
 
   const handleCreateThread = () => {
@@ -75,38 +77,75 @@ function Threads({ group_slug }) {
   };
 
   const handleSubmitThread = async () => {
-
     const token = localStorage.getItem("access_token");
-    const response = await fetch("http://localhost:8000/api/group/thread/create_thread", {
-      method: "POST", 
-      headers: {
-        "Content-Type":"application/json",
-        Authorization: `Bearer ${token}`
-      }, 
-      body: JSON.stringify({
-        title:newTitle, 
-        content:newContent,
-        group_slug:group_slug
-      })
-    });
-    
-    if (!response.ok){
-       throw new Error(`Create failed with status ${response.status}`);
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/group/thread/create_thread",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: newTitle,
+            content: newContent,
+            group_slug: group_slug,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Create failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      enqueueSnackbar(data.detail, { variant: "success" });
+      await fetchThreads();
+      handleCloseDialog();
+    } catch (error) {
+      enqueueSnackbar(error.message || "Failed to create thread", {
+        variant: "error",
+      });
     }
+  };
 
-    const data = await response.json();
-    enqueueSnackbar(data.detail, { variant: "success" });
-    alert('rest for now')
+  const handleCommentSubmit = async () => {
+    if (!newComment.trim()) return;
 
+    setIsSubmittingComment(true);
 
-    const fakeNewThread = {
-      id: Date.now(),
-      title: newTitle,
-      content: newContent,
-      comments: [],
-    };
-    setThreads((prev) => [fakeNewThread, ...prev]);
-    handleCloseDialog();
+    try {
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(
+        "http://localhost:8000/api/group/thread/create_comment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            thread_id: selectedThreadId,
+            content: newComment.trim(),
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to post comment: ${response.statusText}`);
+      }
+
+      await fetchThreads(); // Refresh threads to include new comment
+      enqueueSnackbar("Comment posted!", { variant: "success" });
+      setNewComment("");
+    } catch (err) {
+      enqueueSnackbar(err.message || "Failed to post comment", {
+        variant: "error",
+      });
+    } finally {
+      setIsSubmittingComment(false);
+    }
   };
 
   if (loading) {
@@ -127,7 +166,6 @@ function Threads({ group_slug }) {
 
   return (
     <Box p={3} maxWidth="800px" mx="auto">
-      {/* Top Bar with Heading, Create Button & Search */}
       <Stack
         direction="row"
         justifyContent="space-between"
@@ -144,12 +182,9 @@ function Threads({ group_slug }) {
           <Button variant="outlined" color="success" onClick={handleCreateThread}>
             Create Thread
           </Button>
-          {/* <TextField size="small" placeholder="Search..." />
-          <Button variant="contained">Search</Button> */}
         </Box>
       </Stack>
 
-      {/* Thread List */}
       <List component={Paper} sx={{ borderRadius: 2, boxShadow: 3 }}>
         {threads.length === 0 && (
           <Typography align="center" p={3} color="text.secondary">
@@ -159,31 +194,30 @@ function Threads({ group_slug }) {
 
         {threads.map((thread) => (
           <Box key={thread.id}>
-            <ListItem disablePadding>
-              <ListItemButton
-                selected={thread.id === selectedThreadId}
-                onClick={() => handleSelect(thread.id)}
-                sx={{
-                  bgcolor:
-                    thread.id === selectedThreadId ? "rgba(56, 142, 60, 0.15)" : "white",
-                  borderRadius: 2,
-                  mx: 1,
-                  my: 0.5,
-                  transition: "0.2s",
-                  "&:hover": {
-                    bgcolor: "action.hover",
-                  },
-                }}
+            <ListItemButton
+              selected={thread.id === selectedThreadId}
+              onClick={() => handleSelect(thread.id)}
+              sx={{
+                bgcolor:
+                  thread.id === selectedThreadId
+                    ? "rgba(56, 142, 60, 0.15)"
+                    : "white",
+                borderRadius: 2,
+                mx: 1,
+                my: 0.5,
+                transition: "0.2s",
+                "&:hover": {
+                  bgcolor: "action.hover",
+                },
+              }}
+            >
+              <Typography
+                variant="body1"
+                sx={{ fontWeight: 500, fontSize: "1.1rem", px: 2 }}
               >
-                <ListItemText
-                  primary={thread.title}
-                  primaryTypographyProps={{
-                    fontWeight: 500,
-                    fontSize: "1.1rem",
-                  }}
-                />
-              </ListItemButton>
-            </ListItem>
+                {thread.title}
+              </Typography>
+            </ListItemButton>
 
             {selectedThreadId === thread.id && (
               <Box
@@ -203,9 +237,22 @@ function Threads({ group_slug }) {
                 >
                   Content:
                 </Typography>
-                <Typography variant="body1" mb={2}>
+                <Typography variant="body1" mb={1}>
                   {thread.content}
                 </Typography>
+
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  mb={2}
+                  display="block"
+                >
+                  Created at:{" "}
+                  {thread.created_at
+                    ? new Date(thread.created_at).toLocaleString()
+                    : "Unknown"}
+                </Typography>
+
                 <Typography
                   variant="subtitle1"
                   fontWeight={600}
@@ -215,17 +262,33 @@ function Threads({ group_slug }) {
                   Comments:
                 </Typography>
                 <Divider />
-                {thread.comments && thread.comments.length > 0 ? (
-                  thread.comments.map((comment, index) => (
-                    <Box key={index} mt={1.5}>
+
+                {thread.thread_comments && thread.thread_comments.length > 0 ? (
+                  thread.thread_comments.map((comment) => (
+                    <Box key={comment.id} mt={1.5}>
                       <Typography
                         variant="body2"
-                        sx={{ fontWeight: 500, color: theme.palette.success.main }}
+                        sx={{
+                          fontWeight: 500,
+                          color: theme.palette.success.main,
+                        }}
                       >
-                        {comment.username} | {comment.college}:
+                        User:{" "}
+                        {comment.username
+                          ? comment.username + "#" + comment.user_id
+                          : "Unknown"}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {comment.message}
+                        {comment.content}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        display="block"
+                      >
+                        {comment.created_at
+                          ? new Date(comment.created_at).toLocaleString()
+                          : ""}
                       </Typography>
                     </Box>
                   ))
@@ -234,6 +297,28 @@ function Threads({ group_slug }) {
                     No comments yet.
                   </Typography>
                 )}
+
+                {/* Comment form */}
+                <Box mt={3}>
+                  <TextField
+                    label="Add a comment"
+                    multiline
+                    fullWidth
+                    minRows={2}
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    disabled={isSubmittingComment}
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 1 }}
+                    onClick={handleCommentSubmit}
+                    disabled={isSubmittingComment || !newComment.trim()}
+                  >
+                    {isSubmittingComment ? "Posting..." : "Comment"}
+                  </Button>
+                </Box>
               </Box>
             )}
           </Box>
@@ -241,7 +326,12 @@ function Threads({ group_slug }) {
       </List>
 
       {/* Create Thread Dialog */}
-      <Dialog open={openCreateDialog} onClose={handleCloseDialog} fullWidth maxWidth="sm">
+      <Dialog
+        open={openCreateDialog}
+        onClose={handleCloseDialog}
+        fullWidth
+        maxWidth="sm"
+      >
         <DialogTitle>Create New Thread</DialogTitle>
         <DialogContent>
           <TextField

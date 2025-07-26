@@ -48,6 +48,23 @@ export async function fetchUserDetails() {
   return await response.json();
 }
 
+export async function fetchOtherUserDetails(user_id) {
+  const token = localStorage.getItem("access_token");
+  if (!token) throw new Error("Access token not found");
+
+  const response = await fetch(`http://localhost:8000/api/user/${user_id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
 
 export async function refreshToken() {
   const refreshToken = localStorage.getItem("refresh_token");
