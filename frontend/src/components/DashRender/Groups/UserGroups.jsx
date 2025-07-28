@@ -21,12 +21,15 @@ function UserGroups() {
       const token = localStorage.getItem("access_token");
 
       try {
-        const response = await fetch("http://localhost:8000/api/group/my_groups_owned", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "http://localhost:8000/api/group/my_groups_owned",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -89,19 +92,19 @@ function UserGroups() {
             }) => (
               <Grid item xs={12} sm={6} md={6} lg={4} key={slug}>
                 <Paper
-                 onClick={() =>
-                        navigate(`/groups/${slug}`, {
-                          state: {
-                            slug,
-                            name,
-                            description,
-                            tags,
-                            owner_username,
-                            total_members,
-                            visibility,
-                          },
-                        })
-                      }
+                  onClick={() =>
+                    navigate(`/groups/${slug}`, {
+                      state: {
+                        slug,
+                        name,
+                        description,
+                        tags,
+                        owner_username,
+                        total_members,
+                        visibility,
+                      },
+                    })
+                  }
                   elevation={4}
                   sx={{
                     p: 3,
@@ -135,24 +138,32 @@ function UserGroups() {
                     >
                       {description || "No description"}
                     </Typography>
-
+                    <Typography variant="caption" color="text.secondary">
+                      Group Code:{" "}
+                      <span style={{ fontWeight: "bold" }}>{slug}</span>
+                    </Typography>
                     {tags && (
-                      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                      {tags.split(",").map((tag, index) => (
-                      <Chip
-                      key={index}
-                      label={tag.trim()}
-                      size="small"
-                      color="success"
-                      variant="outlined"
-                      sx={{
-                      maxWidth: "120px",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      }}
-                      />
-                      ))}
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        flexWrap="wrap"
+                        useFlexGap
+                      >
+                        {tags.split(",").map((tag, index) => (
+                          <Chip
+                            key={index}
+                            label={tag.trim()}
+                            size="small"
+                            color="success"
+                            variant="outlined"
+                            sx={{
+                              maxWidth: "120px",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          />
+                        ))}
                       </Stack>
                     )}
                   </Stack>
