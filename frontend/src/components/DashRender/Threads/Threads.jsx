@@ -22,8 +22,16 @@ const threadsArray = [
     group_slug: "english",
     user_id: 3,
     comments: [
-      { username: "jane_doe", college: "NYU", message: "Great post! Want more info" },
-      { username: "mike21", college: "UCLA", message: "I don't know about that. Check your info" },
+      {
+        username: "jane_doe",
+        college: "NYU",
+        message: "Great post! Want more info",
+      },
+      {
+        username: "mike21",
+        college: "UCLA",
+        message: "I don't know about that. Check your info",
+      },
     ],
   },
   {
@@ -34,8 +42,16 @@ const threadsArray = [
     group_slug: "english",
     user_id: 3,
     comments: [
-      { username: "sarah_b", college: "Columbia", message: "Helpful insights!" },
-      { username: "tobi_e", college: "UT Austin", message: "Can you expand on this?" },
+      {
+        username: "sarah_b",
+        college: "Columbia",
+        message: "Helpful insights!",
+      },
+      {
+        username: "tobi_e",
+        college: "UT Austin",
+        message: "Can you expand on this?",
+      },
     ],
   },
   {
@@ -47,7 +63,11 @@ const threadsArray = [
     user_id: 3,
     comments: [
       { username: "leonardM", college: "MIT", message: "I totally agree!" },
-      { username: "keishaQ", college: "Stanford", message: "Need more explanation here." },
+      {
+        username: "keishaQ",
+        college: "Stanford",
+        message: "Need more explanation here.",
+      },
     ],
   },
   {
@@ -81,7 +101,11 @@ function Threads() {
           Discussion Threads
         </Typography>
         <Box display="flex" gap={1}>
-          <TextField size="small" placeholder="Search..." />
+          <TextField
+            size="small"
+            placeholder="Search..."
+            sx={{ backgroundColor: "white" }}
+          />
           <Button variant="contained">Search</Button>
         </Box>
       </Box>
@@ -95,7 +119,9 @@ function Threads() {
                 onClick={() => handleSelect(thread.id)}
                 sx={{
                   bgcolor:
-                    thread.id === selectedThreadId ? "rgba(56, 142, 60, 0.15)" : "white",
+                    thread.id === selectedThreadId
+                      ? "rgba(56, 142, 60, 0.15)"
+                      : "white",
                   borderRadius: 2,
                   mx: 1,
                   my: 0.5,
@@ -139,7 +165,10 @@ function Threads() {
                     <Box key={index} mt={1.5}>
                       <Typography
                         variant="body2"
-                        sx={{ fontWeight: 500, color: theme.palette.success.main }}
+                        sx={{
+                          fontWeight: 500,
+                          color: theme.palette.success.main,
+                        }}
                       >
                         {comment.username} | {comment.college}:
                       </Typography>
