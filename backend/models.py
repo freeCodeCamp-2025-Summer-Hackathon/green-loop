@@ -5,6 +5,8 @@ import datetime as dt
 from sqlmodel import Field, SQLModel, Relationship
 from utils import slugify
 from passlib.hash import bcrypt
+from secrets import token_urlsafe
+
 
 class User(SQLModel, table=True):
     __tablename__ = "users"
@@ -45,7 +47,7 @@ class User(SQLModel, table=True):
     
 
 class Group(SQLModel, table=True):
-    __tablename__ = "group"
+    __tablename__ = "groups"
     id: int  = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True, max_length=100)
     slug: str = Field(index=True, unique=True, max_length=100)
@@ -60,6 +62,9 @@ class Group(SQLModel, table=True):
 
     # The user who owns the group
     owner: User  = Relationship(back_populates="owned_groups")
+    
+    is_private: bool = Field(default=True)
+    access_code: int | None
 
     # Threads in the group
     threads: List["Thread"] = Relationship(back_populates="group")
@@ -69,44 +74,28 @@ class Group(SQLModel, table=True):
     # Each GroupUser instance represents a user in a group with a specific role
     group_users: List["GroupUser"] = Relationship(back_populates="group")
 
-    # Group can be public or private
-    # PublicGroup and PrivateGroup are separate models to handle different access types
-    public_group: "PublicGroup"  = Relationship(back_populates="group")
-    private_group: "PrivateGroup" = Relationship(back_populates="group")
 
+    def generate_access_code(self)-> str:
+        return token_urlsafe(8)[:10]  # ~10 characters long
+        
 
     def __init__(self, **data):
         super().__init__(**data)
         if not self.slug and self.name:
             self.slug = slugify(self.name)
+        # Generate access code if group is private
+        if  self.is_private:
+            self.access_code = self.generate_access_code()
     
 
-class PublicGroup(SQLModel, table=True):
-    __tablename__ = "public_group"
-    id: int  = Field(default=None, primary_key=True)
-    group_id: int = Field(foreign_key="group.id")
-
-    group: Group | None = Relationship(back_populates="public_group")
 
 
-class PrivateGroup(SQLModel, table=True):
-    __tablename__ = "private_group"
-    id: int = Field(default=None, primary_key=True)
-    group_id: int = Field(foreign_key="group.id")
 
-    # Access code for private groups
-
-    access_code: str = Field(
-        default=lambda: secrets.token_urlsafe(8),  # generates ~11 chars URL-safe string
-        max_length=50
-    )
-
-    group: "Group" = Relationship(back_populates="private_group")
 
 class GroupUser(SQLModel, table=True):
     __tablename__ = "group_user"
     user_id: int = Field(foreign_key="users.id", primary_key=True)
-    group_id: int = Field(foreign_key="group.id", primary_key=True)
+    group_id: int = Field(foreign_key="groups.id", primary_key=True)
     role: str = Field(default="member", max_length=20)
     joined_at: datetime
 
@@ -120,9 +109,8 @@ class Thread(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     title: str = Field(max_length=150)
     content: str
-    topic: str  = Field(max_length=100)
     is_resolved: bool = Field(default=False)
-    group_id: int = Field(foreign_key="group.id")
+    group_id: int = Field(foreign_key="groups.id")
     user_id: int = Field(foreign_key="users.id")
     created_at: datetime = Field(default=datetime.now(dt.UTC))
     updated_at: datetime = Field(default=datetime.now(dt.UTC))
@@ -143,3 +131,9 @@ class ThreadComment(SQLModel, table=True):
     updated_at: datetime = Field(default=datetime.now(dt.UTC))
     user: User | None = Relationship(back_populates="thread_comments")
     thread: Thread | None = Relationship(back_populates="thread_comments")
+
+
+    @property
+    def username(self) -> str:
+        """Returns the username of the comment's author, if available."""
+        return self.user.username if self.user else "Unknown"

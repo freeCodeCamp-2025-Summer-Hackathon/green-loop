@@ -1,5 +1,5 @@
 import datetime
-from typing import Union
+from typing import List, Union
 from pydantic import BaseModel, EmailStr
 from pyparsing import Optional
 from sqlmodel import Field
@@ -14,10 +14,62 @@ class AccessTokenResponse(BaseModel):
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
 
-class GroupRequest(BaseModel):
+class GroupCreate(BaseModel):
     name: str
     description : str
     tags: str | None = None
+    is_private: bool | None = False
+
+
+class ThreadBase(BaseModel):
+    
+    pinned :bool = False
+    locked : bool = False
+
+
+class ThreadCreate(ThreadBase):
+    title : str =Field(max_length=150)
+    content : str
+    group_slug : str
+
+
+
+class ThreadCommentCreate(BaseModel):
+    thread_id: int
+    content: str
+
+
+
+class ThreadCommentRead(BaseModel):
+    id: int
+    content: str
+    user_id: int
+    username:str
+    thread_id: int
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
+    model_config = { 
+        'from_attributes': True,
+    }
+
+class ThreadResponse(BaseModel):
+    id: int
+    title: str
+    content: str
+    group_id: int
+    user_id: int
+    pinned: bool 
+    locked: bool
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+    thread_comments: List[ThreadCommentRead]
+
+    model_config = { 
+        'from_attributes': True,
+    }
+
+
 
 class UserBase(BaseModel):
     username: str = Field(max_length=50)
@@ -65,4 +117,4 @@ class UserCreate(UserBase):
 
 
 class BaseResponse (BaseModel):
-    detail : str
+    detail : str    

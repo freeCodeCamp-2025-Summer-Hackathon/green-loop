@@ -1,43 +1,56 @@
-import { ThemeContext } from "@emotion/react";
+import React from "react";
 import {
   CssBaseline,
   Drawer,
-  useTheme,
   List,
   ListItemButton,
+  ListItemText,
+  Toolbar,
+  Typography,
 } from "@mui/material";
 
-import { Link } from "react-router-dom";
+const drawerWidth = 240;
 
 function DashNav({ onNavigate }) {
-  return (
-    <div style={{ display: "flex" }}>
-      <CssBaseline />
-      <Drawer variant="permanent" anchor="left"></Drawer>
+  const menuItems = [
+    { key: "dash", label: "Dashboard" },
+    { key: "mygroups", label: "My Groups" },
+    { key: "threads", label: "My Threads" },
+    { key: "resources", label: "My Resource" },
+  ];
 
-      <List
+  return (
+    <>
+      <CssBaseline />
+      <Drawer
+        variant="permanent"
+        anchor="left"
         sx={{
-          marginTop: "60px",
-          backgroundColor: "lightgray",
-          borderTopLeftRadius: "5px",
-          borderBottomLeftRadius: "5px",
-          height: "50vh",
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: "border-box",
+            backgroundColor: "#e0f7e9", // pastel green (not gray!)
+            borderRight: "1px solid #cceedd",
+            paddingTop: "64px",
+          },
         }}
       >
-        <ListItemButton onClick={() => onNavigate("dash")}>
-          Dashboard
-        </ListItemButton>
-        <ListItemButton onClick={() => onNavigate("groups")}>
-          Groups
-        </ListItemButton>
-        <ListItemButton onClick={() => onNavigate("threads")}>
-          Threads
-        </ListItemButton>
-        <ListItemButton onClick={() => onNavigate("resources")}>
-          Resources
-        </ListItemButton>
-      </List>
-    </div>
+        <Toolbar>
+          <Typography variant="h6" noWrap component="div">
+            Ensemble
+          </Typography>
+        </Toolbar>
+        <List>
+          {menuItems.map(({ key, label }) => (
+            <ListItemButton key={key} onClick={() => onNavigate(key)}>
+              <ListItemText primary={label} />
+            </ListItemButton>
+          ))}
+        </List>
+      </Drawer>
+    </>
   );
 }
 

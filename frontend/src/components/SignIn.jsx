@@ -93,12 +93,16 @@ function SignIn() {
 
 
     try {
+      const loginCredentialsFormData = new URLSearchParams();
+      loginCredentialsFormData.append('username', loginCredentials.email);
+      loginCredentialsFormData.append('password', loginCredentials.password);
+
       const response = await fetch("http://localhost:8000/api/token", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify(loginCredentials),
+        body: loginCredentialsFormData.toString(),
       });
 
       if (!response.ok) {

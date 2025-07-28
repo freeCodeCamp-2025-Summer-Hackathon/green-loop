@@ -45,7 +45,7 @@ async def register(
 
 
 #login endpoint
-@router.post('/token', summary="Get access token", response_model=schemas.AccessTokenResponse, status_code=status.HTTP_200_OK)
+@router.post('/token', summary="Generate Access Token", response_model=schemas.AccessTokenResponse, status_code=status.HTTP_200_OK)
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db_session: Session = Depends(get_db_session),
@@ -79,3 +79,22 @@ async def refresh_access_token(
         access_token=access_token,
         refresh_token=refresh_token
     )
+
+@router.get('/user/me', response_model=schemas.UserBase, summary='Get current authenticated user')
+async def get_current_user_info(
+    current_user: User = Depends(auth.authenticate_user)
+):
+    return current_user
+
+@router.get('/user/{user_id}', response_model=schemas.UserBase, summary='Get user')
+async def get_current_user_info(
+    user_id: int,
+    current_user: User = Depends(auth.authenticate_user),
+    db: Session = Depends(get_db_session)
+):
+    user = db.exec(select(User).where(User.id == user_id)).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user
