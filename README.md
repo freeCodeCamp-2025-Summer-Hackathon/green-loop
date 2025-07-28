@@ -32,14 +32,10 @@ Created as part of the Hackathon by Team Green-Loop.
 * Enmanuel Torres — `@sn0wier`
 * Donaven — `@donaven`
 * JJ — `@jjotteson1`
+* Abraham — `@abego2018`
 
 ### 🟢 Backend
-
-* Abraham — `@abego2018`
-* Jamike — `@bro9872` / `@johno`
-* Enmanuel Torres — `@sn0wier`
-* Donaven — `@donaven`
-
+* Jamike — `@bro9872` / `@johno` :Senior Developer
 ---
 
 ## 🚀 How to Run the Backend Locally
