@@ -15,11 +15,10 @@ import {
   Autocomplete,
   Chip,
   Checkbox,
-  FormControlLabel
+  FormControlLabel,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-
 
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
@@ -41,10 +40,9 @@ function Dash({ message }) {
   const [groupTags, setGroupTags] = useState([]);
   const [isPrivate, setIsPrivate] = useState(false);
 
-  // navigate 
+  // navigate
 
   const navigate = useNavigate();
-
 
   // Predefined tags for group creation
   const predefinedTags = [
@@ -67,34 +65,69 @@ function Dash({ message }) {
   const handleCreate = async () => {
     // TODO: API call here
     const token = localStorage.getItem("access_token");
-    const response = await fetch("http://localhost:8000/api/group/create_group", {
-      method: "POST",    
-      headers: {
-        "Content-Type":"application/json",
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      "http://localhost:8000/api/group/create_group",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: groupName,
+          description: groupDesc,
+          tags: groupTags.join(","),
+          is_private: isPrivate,
+        }),
       },
-      body: JSON.stringify({
-        name:groupName, 
-        description:groupDesc, 
-        tags:groupTags.join(','),
-        is_private:isPrivate
-      })
-    });
+    );
 
+    const data = await response.json();
     if (!response.ok) {
-        throw new Error(`Create failed with status ${response.status}`);
+      if (response.status >= 400 && response.status < 500){
+        // response is 400, client error
+        enqueueSnackbar("Client Error: " + data.detail, { variant: "error" });
+      } else if (response.status >= 500){
+        enqueueSnackbar("Server Error: Internal Server Error", {variant:'error'});
       }
+    } else {
+       enqueueSnackbar(data.detail, { variant: "success" });
+       setTimeout(() => navigate(`/groups/${data.group_slug}`), 2000);
 
-      const data = await response.json();
-      enqueueSnackbar(data.detail, { variant: "success" });
-      setTimeout(() => navigate(`/groups/${data.group_slug}`), 5000)
-
+    }
     handleClose();
   };
 
-  const handleJoin = () => {
-    console.log("Join group with code:", joinCode);
+  const handleJoin = async () => {
     // TODO: API call here
+    const token = localStorage.getItem("access_token");
+    const response = await fetch(`http://localhost:8000/api/group/${joinCode}/join`, {
+      method: "POST",
+      headers : {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+
+      }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (response.status >= 400 && response.status < 500){
+        // response is 400, client error
+        enqueueSnackbar("Client Error: " + data.detail, { variant: "error" });
+      } else if (response.status >= 500){
+        enqueueSnackbar("Server Error: Internal Server Error", {variant:'error'});
+      }
+    } else {
+      enqueueSnackbar(data.detail, { variant: "success" });
+      setTimeout(() => navigate(`/groups/${joinCode}`), 2000);
+
+    }
+
+
+    
+
     handleClose();
   };
 
@@ -155,6 +188,7 @@ function Dash({ message }) {
           },
         }}
       >
+        {/* Create a group dialog */}
         <DialogTitle>Create a Study Group</DialogTitle>
         <DialogContent>
           <TextField
@@ -214,11 +248,11 @@ function Dash({ message }) {
 
           <FormControlLabel
             control={
-            <Checkbox
-            checked={isPrivate}
-            onChange={(e) => setIsPrivate(e.target.checked)}
-            sx={{ color: "#fff" }}
-            />
+              <Checkbox
+                checked={isPrivate}
+                onChange={(e) => setIsPrivate(e.target.checked)}
+                sx={{ color: "#fff" }}
+              />
             }
             label="Make Group Private"
             sx={{ color: "#ccc", mt: 1 }}
@@ -247,17 +281,19 @@ function Dash({ message }) {
       >
         <DialogTitle>Join a Study Group</DialogTitle>
         <DialogContent>
-          <TextField
-            fullWidth
-            label="Group Code"
-            margin="normal"
-            value={joinCode}
-            onChange={(e) => setJoinCode(e.target.value)}
-            InputLabelProps={{ style: { color: "#ccc" } }}
-            InputProps={{
-              style: { color: "#fff" },
-            }}
-          />
+          <Box sx={{ width: "400px" }}>
+            <TextField
+              fullWidth
+              label="Group Code"
+              margin="normal"
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
+              InputLabelProps={{ style: { color: "#ccc" } }}
+              InputProps={{
+                style: { color: "#fff" },
+              }}
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="inherit">

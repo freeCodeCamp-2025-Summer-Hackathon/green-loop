@@ -63,9 +63,14 @@ function Groups() {
   return (
     <Box sx={{ fontFamily: "'Inter', sans-serif", mt: 5 }}>
       {groups.length === 0 ? (
-        <Typography color="text.secondary" align="center">
+        <div>
+          <Typography color="text.secondary" align="center">
           You are not a member of any groups yet.
         </Typography>
+        <Typography align="center" color="text.secondary">
+         <i> Create or Join a group</i>
+        </Typography>
+        </div>
       ) : (
         <>
           <Typography

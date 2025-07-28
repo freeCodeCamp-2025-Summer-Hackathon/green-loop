@@ -131,3 +131,9 @@ class ThreadComment(SQLModel, table=True):
     updated_at: datetime = Field(default=datetime.now(dt.UTC))
     user: User | None = Relationship(back_populates="thread_comments")
     thread: Thread | None = Relationship(back_populates="thread_comments")
+
+
+    @property
+    def username(self) -> str:
+        """Returns the username of the comment's author, if available."""
+        return self.user.username if self.user else "Unknown"
