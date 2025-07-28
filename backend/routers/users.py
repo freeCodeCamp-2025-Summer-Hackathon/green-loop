@@ -73,6 +73,7 @@ async def refresh_access_token(
     refresh_token: schemas.RefreshTokenRequest, 
     db: Session = Depends(get_db_session)
 ):
+    refresh_token = refresh_token.refresh_token
     user = auth.verify_token(refresh_token, db, is_refresh=True)
     access_token = await auth.create_access_token(user)
     return schemas.AccessTokenResponse(

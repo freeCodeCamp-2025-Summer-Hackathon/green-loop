@@ -2,7 +2,11 @@ from sqlmodel import SQLModel, Field, create_engine, Session
 from models import *
 
 DATABASE_URL = "sqlite:///./study_platform.db"
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(
+    DATABASE_URL,
+    echo=False,
+    connect_args={"check_same_thread": False}
+)
 
 def initialize_db():
     # Create all tables in the database

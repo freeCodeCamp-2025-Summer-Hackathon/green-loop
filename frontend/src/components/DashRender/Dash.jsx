@@ -24,6 +24,11 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
 import Groups from "./Groups/Groups";
+import {
+  isTokenExpired,
+  refreshToken,
+  hasPrivateCode,
+} from "../../utils/utils";
 
 function Dash({ message }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -84,49 +89,85 @@ function Dash({ message }) {
 
     const data = await response.json();
     if (!response.ok) {
-      if (response.status >= 400 && response.status < 500){
+      if (response.status >= 400 && response.status < 500) {
         // response is 400, client error
         enqueueSnackbar("Client Error: " + data.detail, { variant: "error" });
-      } else if (response.status >= 500){
-        enqueueSnackbar("Server Error: Internal Server Error", {variant:'error'});
+      } else if (response.status >= 500) {
+        enqueueSnackbar("Server Error: Internal Server Error", {
+          variant: "error",
+        });
       }
     } else {
-       enqueueSnackbar(data.detail, { variant: "success" });
-       setTimeout(() => navigate(`/groups/${data.group_slug}`), 2000);
-
+      enqueueSnackbar(data.detail, { variant: "success" });
+      setTimeout(() => navigate(`/groups/${data.group_slug}`), 2000);
     }
     handleClose();
   };
 
   const handleJoin = async () => {
-    // TODO: API call here
-    const token = localStorage.getItem("access_token");
-    const response = await fetch(`http://localhost:8000/api/group/${joinCode}/join`, {
-      method: "POST",
-      headers : {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+    if (isTokenExpired()) {
+      await refreshToken();
+    }
 
-      }
-    });
+    const token = localStorage.getItem("access_token");
+    const response = await fetch(
+      `http://localhost:8000/api/group/${joinCode}/join`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
     const data = await response.json();
 
     if (!response.ok) {
-      if (response.status >= 400 && response.status < 500){
+      if (response.status >= 400 && response.status < 500) {
         // response is 400, client error
         enqueueSnackbar("Client Error: " + data.detail, { variant: "error" });
-      } else if (response.status >= 500){
-        enqueueSnackbar("Server Error: Internal Server Error", {variant:'error'});
+      } else if (response.status >= 500) {
+        enqueueSnackbar("Server Error: Internal Server Error", {
+          variant: "error",
+        });
       }
     } else {
-      enqueueSnackbar(data.detail, { variant: "success" });
-      setTimeout(() => navigate(`/groups/${joinCode}`), 2000);
-
+      if (data.is_private) {
+        const privateCodeBackendHashed = data.private_code;
+        const privateCodeFrontendHashed = await hasPrivateCode(
+          prompt(data.detail),
+        );
+        if (privateCodeBackendHashed === privateCodeFrontendHashed) {
+          setTimeout(async () => {
+            try {
+              const followUpResponse = await fetch(
+                `http://localhost:8000/api/group/follow_up_join/${joinCode}`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                },
+              );
+              const newData = await followUpResponse.json();
+              enqueueSnackbar(newData.detail, { variant: "success" });
+              navigate(`/groups/${joinCode}`);
+            } catch (error) {
+              enqueueSnackbar("Error joining group: " + error.message, {
+                variant: "error",
+              });
+            }
+          }, 1000); // delay 1 second before calling follow-up
+        } else {
+          enqueueSnackbar("Private Code was Incorrect!", { variant: "error" });
+        }
+      } else {
+        enqueueSnackbar(data.detail, { variant: "success" });
+        setTimeout(() => navigate(`/groups/${joinCode}`), 2000);
+      }
     }
-
-
-    
 
     handleClose();
   };

@@ -8,11 +8,13 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function UserGroups() {
   const [ownedGroups, setOwnedGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchOwnedGroups() {
@@ -87,6 +89,19 @@ function UserGroups() {
             }) => (
               <Grid item xs={12} sm={6} md={6} lg={4} key={slug}>
                 <Paper
+                 onClick={() =>
+                        navigate(`/groups/${slug}`, {
+                          state: {
+                            slug,
+                            name,
+                            description,
+                            tags,
+                            owner_username,
+                            total_members,
+                            visibility,
+                          },
+                        })
+                      }
                   elevation={4}
                   sx={{
                     p: 3,
@@ -122,13 +137,23 @@ function UserGroups() {
                     </Typography>
 
                     {tags && (
+                      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                      {tags.split(",").map((tag, index) => (
                       <Chip
-                        label={tags}
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                        sx={{ width: "fit-content" }}
+                      key={index}
+                      label={tag.trim()}
+                      size="small"
+                      color="success"
+                      variant="outlined"
+                      sx={{
+                      maxWidth: "120px",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      }}
                       />
+                      ))}
+                      </Stack>
                     )}
                   </Stack>
 

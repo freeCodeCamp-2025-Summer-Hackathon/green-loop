@@ -4,8 +4,12 @@ import fastapi
 import schemas
 import email_validator as _email_checker
 import passlib.hash as _hash
+import hashlib
 from requests import Session
 from datetime import datetime, timezone
+from secrets import token_urlsafe
+
+
 
 
 
@@ -73,3 +77,12 @@ async def create_user(user:schemas.UserCreate, db_session:Session = fastapi.Depe
     return user_obj
 
 
+def generate_access_code(is_private)-> str | None:
+        if is_private:
+            return token_urlsafe(8)[:5]  # ~10 characters long
+        else:
+            return None
+
+
+def hash_private_code(s: str) -> str:
+    return hashlib.sha256(s.encode('utf-8')).hexdigest()

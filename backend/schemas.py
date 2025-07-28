@@ -80,6 +80,17 @@ class UserBase(BaseModel):
     profile_picture_url: str | None = None
     bio: str = Field(default="Hey There! I'm using Ensemble.", max_length=250)
 
+
+
+
+class GroupMemberInfo(BaseModel):
+    user_id : int   
+    username: str
+    email: str
+    role: str
+    joined_at: datetime
+
+
 class GroupInfo(BaseModel):
     name: str
     slug: str
@@ -91,6 +102,10 @@ class GroupInfo(BaseModel):
     updated_at: datetime.datetime
     total_members: int
     visibility: str  # "public" or "private"
+    members : List[GroupMemberInfo]
+
+
+
 
 
 class UserPayLoadJwt(BaseModel):

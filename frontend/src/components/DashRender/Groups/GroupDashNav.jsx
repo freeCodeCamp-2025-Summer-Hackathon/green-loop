@@ -60,13 +60,19 @@ function GroupDashNav({ onNavigate, onBack, groupName = "Group" }) {
             <ListItemButton
               key={key}
               onClick={() => onNavigate(key)}
-              sx={{
-                py: 1.5,
-                '& + &': {
-                  mt: 0.5,
-                },
-                color: isDestructive ? "error.main" : "inherit",
-              }}
+              // sx={{
+              //   m: 1,
+              //   borderRadius: 2,
+              //   transition: "all 0.3s ease",
+              //   backgroundColor:
+              //     selectedKey === key ? "#c8ebd8" : "transparent",
+              //   boxShadow:
+              //     selectedKey === key ? "0 2px 8px rgba(0,0,0,0.1)" : "none",
+              //   "&:hover": {
+              //     backgroundColor: "#d6f5e3",
+              //     transform: "translateX(4px)",
+              //   },
+              // }}
             >
               <ListItemText
                 primary={label}
