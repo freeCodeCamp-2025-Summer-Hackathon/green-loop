@@ -84,7 +84,6 @@ class UserBase(BaseModel):
 
 
 class GroupMemberInfo(BaseModel):
-    user_id : int   
     username: str
     email: str
     role: str
