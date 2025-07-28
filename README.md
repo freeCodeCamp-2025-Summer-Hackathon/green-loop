@@ -27,12 +27,9 @@ Created as part of the Hackathon by Team Green-Loop.
 
 ### 🔵 Frontend
 
-* Jackson — `@Wayloe`
-* Tiffany — `@Itnerd`
-* Enmanuel Torres — `@sn0wier`
-* Donaven — `@donaven`
-* JJ — `@jjotteson1`
-* Abraham — `@abego2018`
+* Jackson — `@Wayloe` : Developer
+* Tiffany — `@Itnerd` : Team Lead/Developer
+* Abraham — `@abego2018`: Developer
 
 ### 🟢 Backend
 * Jamike — `@bro9872` / `@johno` :Senior Developer
