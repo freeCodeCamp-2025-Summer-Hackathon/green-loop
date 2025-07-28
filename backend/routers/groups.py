@@ -256,7 +256,7 @@ def get_owned_groups(
 
 
 
-@router.get("/{group_slug}/profile", response_model=schemas.GroupProfile)
+@router.get("/{group_slug}/profile", response_model=schemas.GroupInfo)
 def get_group_profile(
     group_slug: str,
     session: Session = Depends(get_db_session),
@@ -292,7 +292,7 @@ def get_group_profile(
         for group_user, user in results
     ]
 
-    return schemas.GroupProfile(
+    return schemas.GroupInfo(
         name=group.name,
         slug=group.slug,
         description=group.description,

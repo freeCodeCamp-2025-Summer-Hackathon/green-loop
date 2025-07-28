@@ -88,7 +88,7 @@ class GroupMemberInfo(BaseModel):
     username: str
     email: str
     role: str
-    joined_at: datetime
+    joined_at: datetime.datetime
 
 
 class GroupInfo(BaseModel):
