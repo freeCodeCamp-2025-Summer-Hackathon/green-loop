@@ -11,6 +11,16 @@ import { SnackbarProvider } from 'notistack';
 
 
 
+import logo from "./logo.svg";
+import "./App.css";
+import { createTheme } from "@mui/material/styles";
+import { green } from "@mui/material/colors";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { Routes, Route } from "react-router-dom";
+import { Dashboard, SignIn, SignUp } from "./components";
+
+
 const theme = createTheme({
   palette: {
     primary: {

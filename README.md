@@ -27,19 +27,12 @@ Created as part of the Hackathon by Team Green-Loop.
 
 ### 🔵 Frontend
 
-* Jackson — `@Wayloe`
-* Tiffany — `@Itnerd`
-* Enmanuel Torres — `@sn0wier`
-* Donaven — `@donaven`
-* JJ — `@jjotteson1`
+* Jackson — `@Wayloe` : Developer
+* Tiffany — `@Itnerd` : Team Lead/Developer
+* Abraham — `@abego2018`: Developer
 
 ### 🟢 Backend
-
-* Abraham — `@abego2018`
-* Jamike — `@bro9872` / `@johno`
-* Enmanuel Torres — `@sn0wier`
-* Donaven — `@donaven`
-
+* Jamike — `@bro9872` / `@johno` :Senior Developer
 ---
 
 ## 🚀 How to Run the Backend Locally
