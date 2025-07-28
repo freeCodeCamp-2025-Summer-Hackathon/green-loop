@@ -7,7 +7,12 @@ import {
   ListItemText,
   Toolbar,
   Typography,
+  IconButton,
+  Box,
 } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -45,9 +50,24 @@ function DashNav({ onNavigate }) {
         }}
       >
         <Toolbar sx={{ justifyContent: "center" }}>
-          <Typography variant="h6" noWrap component="div" fontWeight="bold">
-            Ensemble
-          </Typography>
+          <Box display="flex" alignItems="center" gap={1}>
+            <IconButton
+              component={Link}
+              to="/home"
+              size="small"
+              sx={{
+                color: "inherit",
+                borderRadius: 1,
+                p: 0.5,
+                "&:hover": { backgroundColor: "#d6f5e3" }
+              }}
+            >
+              <HomeIcon fontSize="large" />
+            </IconButton>
+            <Typography variant="h5" noWrap component="div" fontWeight="bold">
+              Ensemble
+            </Typography>
+          </Box>
         </Toolbar>
         <List>
           {menuItems.map(({ key, label }) => (

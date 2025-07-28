@@ -22,12 +22,14 @@ function ContactUs() {
           >
             <IconButton
               component={Link}
-              to="/"
+              to="/contact"
               size="large"
               color="black"
               sx={{ padding: 0, mr: 1 }}
             >
-              <ArrowBackIcon fontSize="inherit" />
+              <Link to="/home">
+                <ArrowBackIcon fontSize="inherit"/>
+              </Link>
             </IconButton>
             Ensemble
           </Typography>

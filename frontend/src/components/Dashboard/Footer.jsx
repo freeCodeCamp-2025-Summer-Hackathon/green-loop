@@ -8,27 +8,37 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '16px 24px',
-        borderTop: '1px solid #ddd',
-        maxWidth: 600,
-        margin: '0 auto',
-        mt: 'auto', // Optional: push footer to bottom if using flex layout
+        width: '100%',
+        backgroundColor: '#c1fad6ff',
+        color: 'white',
+        py: 2,
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
       }}
     >
-      <Link href="../AboutUs" underline="hover" color="text.secondary"> {/*the href links will be decided on later*/}
-        About Us
-      </Link>
+      <Box
+        sx={{
+          maxWidth: 1700,
+          margin: '0 auto',
+          px: 3,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Link href="/about" underline="hover" color="text.secondary">
+          About Us
+        </Link>
 
-      <Link href="../ContactUs" underline="hover" color="text.secondary">
-        Contact Us
-      </Link>
+        <Link href="/contact" underline="hover" color="text.secondary">
+          Contact Us
+        </Link>
 
-      <Typography variant="body2" color="text.secondary">
-        © {currentYear} Ensemble
-      </Typography>
+        <Typography variant="body2" color="text.secondary">
+          © {currentYear} Ensemble
+        </Typography>
+      </Box>
     </Box>
   );
 };

@@ -5,7 +5,7 @@ import { green } from "@mui/material/colors";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { SignIn, SignUp, Dashboard } from "./components";
+import { SignIn, SignUp, Dashboard, LandingPage, AboutUs, ContactUs } from "./components";
 import GroupDetailsPage from './components/DashRender/Groups/GroupDetailsPage.jsx'
 import { SnackbarProvider } from 'notistack';
 
@@ -33,12 +33,15 @@ function App() {
             <Route path="/auth/signup" element={
               <SignUp/>
             } />
+            <Route path="/home" element={<LandingPage/>}/>
             <Route path="/dashboard" element={
               <Dashboard
               />
             } />
 
             <Route path="/groups/:group_slug" element={<GroupDetailsPage/>}/>
+            <Route path="/about" element={<AboutUs/>}/>
+            <Route path="/contact" element={<ContactUs/>}/>
           </Routes>
         </SnackbarProvider>
       </div>

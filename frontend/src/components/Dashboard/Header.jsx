@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Typography, Tooltip } from '@mui/material';
 import { FaUserCircle, FaCog } from 'react-icons/fa';
-import logo from "../../assets/Logo.png";
 
 const DashHeader = () => {
   return (
@@ -12,14 +11,14 @@ const DashHeader = () => {
       padding="10px 20px"
       borderBottom="1px solid #ddd"
     >
-      {/* Left: Logo */}
+      {/* Left: Logo
       <Box marginLeft="5px">
         <img
           src={logo}
             alt="Logo"
             style={{ height: '100px', width:"100px"}}
         />
-      </Box>
+      </Box> */}
 
       {/* Center: Title */}
       <Typography variant="h2" color="primary" textAlign="center">

@@ -7,6 +7,9 @@ import UserGroups from "./DashRender/Groups/UserGroups";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import SignUpFormStepOne from "./SignUpFormStepOne";
+import LandingPage from"./LandingPage";
+import AboutUs from "./AboutUs";
+import ContactUs from "./ContactUs";
 
 export {
   Dashboard,
@@ -18,4 +21,7 @@ export {
   SignUp,
   SignUpFormStepOne,
   UserGroups,
+  LandingPage,
+  AboutUs,
+  ContactUs,
 };
