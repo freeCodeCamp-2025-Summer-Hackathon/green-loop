@@ -67,6 +67,7 @@ export async function fetchOtherUserDetails(user_id) {
 
 
 export async function refreshToken() {
+
   const refreshToken = localStorage.getItem("refresh_token");
   if (!refreshToken) throw new Error("Refresh token not found");
 
@@ -98,4 +99,13 @@ export async function refreshToken() {
   }
 
   return data.access_token;
+}
+
+
+export async function hasPrivateCode(privateCode) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(privateCode);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }

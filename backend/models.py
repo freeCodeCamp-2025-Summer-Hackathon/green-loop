@@ -5,7 +5,6 @@ import datetime as dt
 from sqlmodel import Field, SQLModel, Relationship
 from utils import slugify
 from passlib.hash import bcrypt
-from secrets import token_urlsafe
 
 
 class User(SQLModel, table=True):
@@ -64,7 +63,8 @@ class Group(SQLModel, table=True):
     owner: User  = Relationship(back_populates="owned_groups")
     
     is_private: bool = Field(default=True)
-    access_code: int | None
+    access_code: str | None  =  Field(index=True, unique=True)
+
 
     # Threads in the group
     threads: List["Thread"] = Relationship(back_populates="group")
@@ -74,18 +74,11 @@ class Group(SQLModel, table=True):
     # Each GroupUser instance represents a user in a group with a specific role
     group_users: List["GroupUser"] = Relationship(back_populates="group")
 
-
-    def generate_access_code(self)-> str:
-        return token_urlsafe(8)[:10]  # ~10 characters long
-        
-
     def __init__(self, **data):
         super().__init__(**data)
         if not self.slug and self.name:
             self.slug = slugify(self.name)
-        # Generate access code if group is private
-        if  self.is_private:
-            self.access_code = self.generate_access_code()
+       
     
 
 

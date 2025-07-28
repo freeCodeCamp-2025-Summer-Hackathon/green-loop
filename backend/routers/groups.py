@@ -2,12 +2,12 @@ import auth
 import datetime as dt
 import schemas
 from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlmodel import Session, func, select
 from typing import List
 from models import Group, User, GroupUser # Import your models
 from database import get_db_session  # your DB session dependency
-from utils import slugify  # your user auth dependency
+from utils import slugify, generate_access_code, hash_private_code
 
 
 router = APIRouter()
@@ -38,8 +38,10 @@ async def create_group(
         owner_id=current_user.id,
         created_at=datetime.now(dt.UTC),
         updated_at=datetime.now(dt.UTC),
-        slug=slugify(group.name)
+        slug=slugify(group.name),
+        access_code=generate_access_code(group.is_private)
     )
+ 
 
 
     db_session.add(new_group)
@@ -79,6 +81,7 @@ async def join_group(
     # Edge case: User is the owner
     if group.owner_id == current_user.id:
         raise HTTPException(status_code=400, detail="You are the owner of this group")
+    
 
     # Check if user already in group
     link = session.exec(
@@ -89,6 +92,14 @@ async def join_group(
     ).first()
     if link:
         raise HTTPException(status_code=400, detail="User already in group, cannot join")
+    
+    # Check if group is private,
+    if group.is_private:
+        return {
+            'detail':'This is a private group, provide access code to proceed ', 
+            'is_private':True,
+            'private_code': hash_private_code(group.access_code)
+            }
 
     # Add user to group with default role "member"
     group_user = GroupUser(
@@ -104,10 +115,34 @@ async def join_group(
     return {"detail": "Joined group successfully"}
 
 
+
+@router.post("/follow_up_join/{group_slug}")
+async def follow_up_join_group(
+    group_slug:str,
+    session:Session = Depends(get_db_session),
+    current_user: User = Depends(auth.authenticate_user)
+):
+    statement = select(Group).where(Group.slug == group_slug)
+    group = session.exec(statement).first()
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+    group_user = GroupUser(
+        group_id=group.id,
+        user_id=current_user.id,
+        role="member",
+        joined_at=datetime.now(dt.UTC)
+    )
+
+
+    session.add(group_user)
+    session.commit()
+    session.refresh(group_user)  # optional
+    return {"detail": "Joined group successfully"} 
+
 @router.get("/{group_slug}/info", response_model=schemas.GroupInfo)
 async def get_group_info(
     group_slug: str,
-    session: Session = Depends(get_db_session)
+    session: Session = Depends(get_db_session),
 ):
     # Fetch group
     group = session.exec(select(Group).where(Group.slug == group_slug)).first()
@@ -218,3 +253,55 @@ def get_owned_groups(
         )
 
     return group_infos
+
+
+
+@router.get("/{group_slug}/profile", response_model=schemas.GroupProfile)
+def get_group_profile(
+    group_slug: str,
+    session: Session = Depends(get_db_session),
+):
+    # Get the group
+    group = session.exec(select(Group).where(Group.slug == group_slug)).first()
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+
+    # Get member count
+    member_count = session.exec(
+        select(func.count()).where(GroupUser.group_id == group.id)
+    ).first() or 0
+
+    # Visibility
+    visibility = "private" if group.is_private else "public"
+
+    # Get members with username, email, role, joined_at
+    statement = (
+        select(GroupUser, User)
+        .join(User, User.id == GroupUser.user_id)
+        .where(GroupUser.group_id == group.id)
+    )
+    results = session.exec(statement).all()
+
+    members = [
+        GroupMemberInfo(
+            username=user.username,
+            email=user.email,
+            role=group_user.role,
+            joined_at=group_user.joined_at,
+        )
+        for group_user, user in results
+    ]
+
+    return GroupProfile(
+        name=group.name,
+        slug=group.slug,
+        description=group.description,
+        tags=group.tags,
+        owner_username=group.owner.username,
+        owner_email=group.owner.email,
+        created_at=group.created_at,
+        updated_at=group.updated_at,
+        total_members=member_count,
+        visibility=visibility,
+        members=members,
+    )

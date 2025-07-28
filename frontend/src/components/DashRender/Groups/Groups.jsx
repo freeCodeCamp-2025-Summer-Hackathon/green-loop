@@ -74,15 +74,13 @@ function Groups() {
       ) : (
         <>
           <Typography
-            variant="h5"
-            fontWeight={600}
-            align="center"
-            gutterBottom
-            color="primary"
-            sx={{ mb: 4 }}
-          >
-            Your Groups
-          </Typography>
+                  variant="h4"
+                  component="h2"
+                  gutterBottom
+                  sx={{ mb: 3, fontWeight: 600 }}
+                >
+                 Your Groups
+                </Typography>
 
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Grid
