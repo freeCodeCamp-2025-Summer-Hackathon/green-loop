@@ -283,7 +283,7 @@ def get_group_profile(
     results = session.exec(statement).all()
 
     members = [
-        GroupMemberInfo(
+        schemas.GroupMemberInfo(
             username=user.username,
             email=user.email,
             role=group_user.role,
@@ -292,7 +292,7 @@ def get_group_profile(
         for group_user, user in results
     ]
 
-    return GroupProfile(
+    return schemas.GroupProfile(
         name=group.name,
         slug=group.slug,
         description=group.description,
