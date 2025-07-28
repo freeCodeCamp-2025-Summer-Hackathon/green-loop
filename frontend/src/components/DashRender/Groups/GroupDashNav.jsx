@@ -17,7 +17,6 @@ const drawerWidth = 240;
 function GroupDashNav({ onNavigate, onBack, groupName = "Group" }) {
   const menuItems = [
     { key: "threads", label: "Group Threads" },
-    { key: "resources", label: "Group Resources" },
     { key: "profile", label: "Group Profile" },
     { key: "leave", label: "Leave Group", isDestructive: true },
   ];

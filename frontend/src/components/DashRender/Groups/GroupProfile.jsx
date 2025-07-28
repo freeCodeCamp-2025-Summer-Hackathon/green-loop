@@ -7,12 +7,18 @@ import {
   Box,
   CircularProgress,
   Avatar,
+  Paper,
+  Stack,
+  Chip,
+  Divider,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 function GroupProfile() {
   const { group_slug } = useParams();
-  const [members, setMembers] = useState([]);
+
+  // State for full group data (null initially)
+  const [group, setGroup] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -36,7 +42,7 @@ function GroupProfile() {
         }
 
         const data = await response.json();
-        setMembers(data.members);
+        setGroup(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -58,20 +64,75 @@ function GroupProfile() {
   if (error) {
     return (
       <Typography color="error" align="center" sx={{ mt: 6 }}>
-        Error loading group members: {error}
+        Error loading group profile: {error}
       </Typography>
     );
   }
 
+  if (!group) {
+    return null; // or a fallback UI
+  }
+
+  const {
+    name,
+    description,
+    tags,
+    owner_username,
+    owner_email,
+    created_at,
+    visibility,
+    total_members,
+    members,
+  } = group;
+
+  const formattedCreatedDate = new Date(created_at).toLocaleDateString();
+
   return (
-    <Box sx={{ fontFamily: "'Inter', sans-serif", mt: 5, px: 3 }}>
+    <Box sx={{ fontFamily: "'Inter', sans-serif", mt: 5, px: 3, maxWidth: 900, mx: "auto" }}>
+      <Paper elevation={3} sx={{ p: 4, borderRadius: 3, mb: 5 }}>
+        <Typography variant="h4" fontWeight={700} gutterBottom>
+          🧑‍🤝‍🧑 {name}
+        </Typography>
+
+        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+          Created on {formattedCreatedDate} &bull; Visibility: {visibility.toUpperCase()} &bull;{" "}
+          {total_members} Member{total_members !== 1 ? "s" : ""}
+        </Typography>
+
+        <Typography variant="body1" sx={{ mb: 3 }}>
+          {description}
+        </Typography>
+
+        {tags && (
+          <>
+            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+              Tags
+            </Typography>
+            <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", mb: 3 }}>
+              {tags.split(",").map((tag, idx) => (
+                <Chip key={idx} label={tag.trim()} variant="outlined" />
+              ))}
+            </Stack>
+          </>
+        )}
+
+        <Divider sx={{ mb: 3 }} />
+
+        <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+          Group Owner
+        </Typography>
+        <Typography gutterBottom>
+          {owner_username} 
+        </Typography>
+      </Paper>
+
       <Typography variant="h4" fontWeight={600} gutterBottom>
         Group Members
       </Typography>
 
       <Grid container spacing={4}>
         {members.map((member) => (
-          <Grid item xs={12} sm={6} md={4} key={member.user_id}>
+          <Grid item xs={12} sm={6} md={4} key={member.email}>
             <Card
               elevation={3}
               sx={{
@@ -94,7 +155,8 @@ function GroupProfile() {
                       {member.email}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      Joined: {new Date(member.joined_at).toLocaleDateString()}
+                      Role: {member.role} &nbsp;|&nbsp; Joined:{" "}
+                      {new Date(member.joined_at).toLocaleDateString()}
                     </Typography>
                   </Box>
                 </Box>

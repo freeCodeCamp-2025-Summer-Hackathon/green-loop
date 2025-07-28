@@ -32,7 +32,7 @@ function GroupDetails() {
       <Box sx={{ flexGrow: 1, p: 4 }}>
         <Typography variant="h4" gutterBottom>
           {activeTab === "threads" && "Group Threads"}
-          {activeTab === "resources" && "Group Resources"}
+          {activeTab ==="resources" && "Group Resources"}
           {activeTab === "profile" && "Group Profile"}
           {activeTab === "Leave" && "Group Profile"}
         </Typography>
@@ -40,9 +40,6 @@ function GroupDetails() {
         {/* Dynamic content here */}
         <Box>
           {activeTab === "threads" && <GroupThreads group_slug={group_slug} />}
-          {activeTab === "resources" && (
-            <Typography>Group's shared resources go here...</Typography>
-          )}
           {activeTab === "profile" && <GroupProfile group_slug={group_slug} />}
           {activeTab === "leave" && <Typography>Leave </Typography>}
         </Box>
