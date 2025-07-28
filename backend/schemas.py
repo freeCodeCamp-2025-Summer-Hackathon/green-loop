@@ -102,7 +102,7 @@ class GroupInfo(BaseModel):
     updated_at: datetime.datetime
     total_members: int
     visibility: str  # "public" or "private"
-    members : List[GroupMemberInfo]
+    members : List[GroupMemberInfo] 
 
 
 

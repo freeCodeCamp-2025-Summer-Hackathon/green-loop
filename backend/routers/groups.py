@@ -178,44 +178,59 @@ def get_user_groups(
     current_user: User = Depends(auth.authenticate_user),
     session: Session = Depends(get_db_session),
 ):
-    # 1. Query all groups user belongs to
     statement = (
         select(Group)
         .join(GroupUser, Group.id == GroupUser.group_id)
         .where(GroupUser.user_id == current_user.id)
     )
     groups = session.exec(statement).all()
-
     if not groups:
         return []
 
-    # 2. Build list of GroupInfo objects
     group_info_list = []
 
     for group in groups:
-        # Count members in each group
+        # Count members
         member_count = session.exec(
-            select(func.count())
-            .where(GroupUser.group_id == group.id)
+            select(func.count()).where(GroupUser.group_id == group.id)
         ).first()
 
-        visibility = "private" if group.is_private else "public"
+        # Fetch group members
+        results = session.exec(
+            select(GroupUser, User)
+            .join(User, User.id == GroupUser.user_id)
+            .where(GroupUser.group_id == group.id)
+        ).all()
 
-        group_info = schemas.GroupInfo(
-            name=group.name,
-            slug=group.slug,
-            description=group.description,
-            tags=group.tags,
-            owner_username=group.owner.username,
-            owner_email=group.owner.email,
-            created_at=group.created_at,
-            updated_at=group.updated_at,
-            total_members=member_count or 0,
-            visibility=visibility,
+        members = [
+            schemas.GroupMemberInfo(
+                user_id=user.id,
+                username=user.username,
+                email=user.email,
+                role=group_user.role,
+                joined_at=group_user.joined_at,
+            )
+            for group_user, user in results
+        ]
+
+        group_info_list.append(
+            schemas.GroupInfo(
+                name=group.name,
+                slug=group.slug,
+                description=group.description,
+                tags=group.tags,
+                owner_email=group.owner.email,
+                owner_username=group.owner.username,
+                created_at=group.created_at,
+                updated_at=group.updated_at,
+                total_members=member_count,
+                visibility="private" if group.is_private else "public",
+                members=members,
+            )
         )
-        group_info_list.append(group_info)
 
     return group_info_list
+
 
 
 #get all the group user is the owner of 
