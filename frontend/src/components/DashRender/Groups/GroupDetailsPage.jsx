@@ -3,8 +3,8 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import GroupDashNav from "./GroupDashNav";
 import { Box, Typography } from "@mui/material";
 import GroupThreads from "../Threads/GroupThreads";
+import GroupProfile from "./GroupProfile";
 import { useAuthGuard } from "../../../hooks/useAuthGuard";
-
 
 function GroupDetails() {
   useAuthGuard();
@@ -35,23 +35,16 @@ function GroupDetails() {
           {activeTab === "resources" && "Group Resources"}
           {activeTab === "profile" && "Group Profile"}
           {activeTab === "Leave" && "Group Profile"}
-          
         </Typography>
 
         {/* Dynamic content here */}
         <Box>
-          {activeTab === "threads" && (
-            <GroupThreads group_slug={group_slug}/>
-          )}
+          {activeTab === "threads" && <GroupThreads group_slug={group_slug} />}
           {activeTab === "resources" && (
             <Typography>Group's shared resources go here...</Typography>
           )}
-          {activeTab === "profile" && (
-            <Typography>Group metadata and info displayed here...</Typography>
-          )}
-          {activeTab === "leave" && (
-            <Typography>Leave </Typography>
-          )}
+          {activeTab === "profile" && <GroupProfile group_slug={group_slug} />}
+          {activeTab === "leave" && <Typography>Leave </Typography>}
         </Box>
       </Box>
     </Box>
