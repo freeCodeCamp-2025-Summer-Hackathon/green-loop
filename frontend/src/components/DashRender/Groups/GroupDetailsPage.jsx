@@ -3,9 +3,11 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import GroupDashNav from "./GroupDashNav";
 import { Box, Typography } from "@mui/material";
 import GroupThreads from "../Threads/GroupThreads";
+import { useAuthGuard } from "../../../hooks/useAuthGuard";
 
 
 function GroupDetails() {
+  useAuthGuard();
   const { group_slug } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();

@@ -14,11 +14,14 @@ import Resources from "../DashRender/Resources";
 import Dash from "../DashRender/Dash";
 import UserGroups from "../DashRender/Groups/UserGroups";
 import { useNavigate } from "react-router-dom";
-import { validateToken, isTokenExpired, fetchUserDetails } from "../../utils/utils";
+import { validateToken, isTokenExpired, fetchUserDetails} from "../../utils/utils";
+import {useAuthGuard} from '../../hooks/useAuthGuard';
 
 const drawerWidth = 240;
 
 function Dashboard() {
+
+  useAuthGuard();
   const [message, setMessage] = useState("");
   const [error, setError] = useState(null);
   const [activeComponent, setActiveComponent] = useState("dash");

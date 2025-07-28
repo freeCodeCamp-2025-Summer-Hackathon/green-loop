@@ -6,7 +6,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { SignIn, SignUp, Dashboard } from "./components";
-import { useAuthGuard } from "./hooks/useAuthGuard.js";
 import GroupDetailsPage from './components/DashRender/Groups/GroupDetailsPage.jsx'
 import { SnackbarProvider } from 'notistack';
 
@@ -21,7 +20,6 @@ const theme = createTheme({
 });
 
 function App() {
-  useAuthGuard()
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* Optional: resets default browser styles */}
